@@ -6,176 +6,102 @@
 <title>BCI Beb — neural interfaces · assistive design · cognitive augmentation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Nunito:wght@400;500;600;700&family=Rajdhani:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Chakra+Petch:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
 <style>
-  :root{
-    --night:#1a2238; --night2:#232c4a;
-    --cream:#f3e9d6; --ink:#e6dcc9; --dim:#a6adc8;
-    --amber:#f4b860; --amber2:#ffcf87; --rose:#e88a9a; --cyan:#83d6cd; --green:#9ccb8f;
-    --glass:rgba(30,38,64,.55); --line:rgba(244,184,96,.22);
-    --shadow:0 26px 60px -30px rgba(10,14,30,.9);
-  }
+  :root{--bg:#05060d;--bg2:#0a0e1a;--panel:#0c1120;--cyan:#00e6ff;--mag:#ff2e97;--yel:#f9f002;--purp:#7b5cff;--ink:#cfe9ff;--dim:#6d7ba3;--line:rgba(0,230,255,.22);}
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{
-    margin:0; color:var(--ink); font-family:'Nunito',system-ui,sans-serif; line-height:1.6;
-    overflow-x:hidden; -webkit-font-smoothing:antialiased;
-    background:
-      radial-gradient(1100px 720px at 15% -12%, rgba(244,184,96,.18), transparent 60%),
-      radial-gradient(900px 620px at 100% 0%, rgba(131,214,205,.14), transparent 55%),
-      radial-gradient(1200px 900px at 50% 122%, rgba(232,138,154,.18), transparent 60%),
-      linear-gradient(180deg,#171f34 0%,#232141 46%,#2c2540 72%,#382c42 100%);
-    background-attachment:fixed;
-  }
-  /* soft paper grain */
-  body::before{
-    content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.05;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  }
-  /* drifting fireflies + gentle vignette */
-  body::after{
-    content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.85;
-    background-image:
-      radial-gradient(2px 2px at 20% 30%, rgba(255,214,140,.9), transparent),
-      radial-gradient(2px 2px at 72% 58%, rgba(255,214,140,.7), transparent),
-      radial-gradient(1.6px 1.6px at 42% 82%, rgba(150,230,212,.7), transparent),
-      radial-gradient(2px 2px at 86% 24%, rgba(255,214,140,.6), transparent),
-      radial-gradient(1.6px 1.6px at 55% 14%, rgba(255,214,140,.55), transparent),
-      radial-gradient(2px 2px at 12% 68%, rgba(150,230,212,.6), transparent),
-      radial-gradient(1.4px 1.4px at 33% 50%, rgba(255,214,140,.5), transparent),
-      radial-gradient(1200px 800px at 50% 40%, transparent 62%, rgba(10,12,26,.5) 100%);
-    background-repeat:no-repeat;
-    animation:drift 15s ease-in-out infinite alternate;
-  }
-  @keyframes drift{from{transform:translateY(0)}to{transform:translateY(-16px)}}
-  @keyframes glow{0%,100%{opacity:.55}50%{opacity:1}}
-
-  .wrap{position:relative; z-index:1; max-width:1120px; margin:0 auto; padding:0 20px}
-
-  .statusbar{display:flex; justify-content:space-between; align-items:center;
-    font-family:'Share Tech Mono',monospace; font-size:.72rem; letter-spacing:.12em;
-    color:var(--dim); text-transform:uppercase; padding:14px 4px; border-bottom:1px solid var(--line)}
-  .statusbar .live{color:var(--amber)}
-  .statusbar .blink{color:var(--cyan); animation:glow 2s ease-in-out infinite}
-
-  /* hero */
-  header.hero{padding:60px 0 30px}
-  .eyebrow{font-family:'Share Tech Mono',monospace; font-size:.78rem; letter-spacing:.24em;
-    color:var(--cyan); text-transform:uppercase; margin:0 0 14px}
-  .eyebrow::before{content:"✦ "; color:var(--amber)}
-  h1.name{font-family:'Fraunces',serif; font-weight:600;
-    font-size:clamp(3.2rem,11vw,7rem); line-height:.98; margin:0; letter-spacing:.01em;
-    color:#fbf3e2; text-shadow:0 0 30px rgba(244,184,96,.4), 0 2px 0 rgba(0,0,0,.2)}
-  .glitch::before,.glitch::after{display:none !important}
-  .subline{margin:18px 0 0; font-size:1.34rem; max-width:42ch; color:var(--cream); font-weight:500}
-  .subline b{color:var(--amber); font-weight:700}
-  .roles{display:flex; flex-wrap:wrap; gap:10px; margin-top:22px}
-  .tagx{clip-path:none !important; border-radius:999px;
-    font-family:'Share Tech Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
-    padding:8px 15px; color:var(--cyan); border:1px solid rgba(131,214,205,.5); background:rgba(131,214,205,.08)}
-  .tagx.m{color:var(--rose); border-color:rgba(232,138,154,.5); background:rgba(232,138,154,.08)}
-  .tagx.y{color:var(--amber); border-color:rgba(244,184,96,.5); background:rgba(244,184,96,.08)}
-
-  /* blurb */
-  .blurb{clip-path:none !important; border-radius:22px; margin:36px 0 8px; max-width:900px;
-    background:var(--glass); border:1px solid var(--line); border-left:3px solid var(--amber);
-    padding:30px 34px; box-shadow:var(--shadow); backdrop-filter:blur(3px)}
-  .blurb .hdr{font-family:'Share Tech Mono',monospace; font-size:.74rem; letter-spacing:.18em;
-    color:var(--dim); text-transform:uppercase; margin:0 0 14px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Rajdhani',system-ui,sans-serif;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(760px 520px at 8% -6%, rgba(255,46,151,.20), transparent 60%),radial-gradient(820px 560px at 100% 4%, rgba(0,230,255,.18), transparent 60%),radial-gradient(900px 700px at 50% 116%, rgba(123,92,255,.18), transparent 60%)}
+  body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;background:repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.28) 2px 3px),linear-gradient(rgba(0,230,255,.05) 1px, transparent 1px) 0 0/44px 44px,linear-gradient(90deg, rgba(0,230,255,.05) 1px, transparent 1px) 0 0/44px 44px;mix-blend-mode:screen}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 20px}
+  .statusbar{display:flex;justify-content:space-between;align-items:center;font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;padding:14px 4px;border-bottom:1px solid var(--line)}
+  .statusbar .live{color:var(--cyan)}
+  .statusbar .blink{color:var(--yel);animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  header.hero{padding:58px 0 30px;position:relative}
+  .eyebrow{font-family:'Share Tech Mono',monospace;font-size:.78rem;letter-spacing:.28em;color:var(--cyan);text-transform:uppercase;margin:0 0 14px}
+  .eyebrow::before{content:"▍ ";color:var(--mag)}
+  h1.name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(3.4rem,13vw,8.2rem);line-height:.9;margin:0;letter-spacing:.02em;color:#eafcff;position:relative;display:inline-block;text-shadow:0 0 18px rgba(0,230,255,.35)}
+  .glitch{position:relative}
+  .glitch::before,.glitch::after{content:attr(data-txt);position:absolute;left:0;top:0;width:100%;clip-path:inset(0 0 0 0)}
+  .glitch::before{color:var(--mag);transform:translate(3px,0);animation:gl1 3.2s infinite linear alternate;mix-blend-mode:screen}
+  .glitch::after{color:var(--cyan);transform:translate(-3px,0);animation:gl2 2.7s infinite linear alternate;mix-blend-mode:screen}
+  @keyframes gl1{0%{clip-path:inset(0 0 82% 0)}20%{clip-path:inset(40% 0 40% 0)}40%{clip-path:inset(78% 0 4% 0)}60%{clip-path:inset(10% 0 66% 0)}80%{clip-path:inset(54% 0 22% 0)}100%{clip-path:inset(30% 0 50% 0)}}
+  @keyframes gl2{0%{clip-path:inset(70% 0 12% 0)}25%{clip-path:inset(16% 0 62% 0)}50%{clip-path:inset(46% 0 30% 0)}75%{clip-path:inset(4% 0 80% 0)}100%{clip-path:inset(60% 0 8% 0)}}
+  .subline{margin:20px 0 0;font-size:1.28rem;max-width:44ch;color:var(--ink);font-weight:500}
+  .subline b{color:var(--yel);font-weight:700}
+  .roles{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .tagx{font-family:'Share Tech Mono',monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;color:var(--cyan);border:1px solid var(--cyan);background:rgba(0,230,255,.06);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+  .tagx.m{color:var(--mag);border-color:var(--mag);background:rgba(255,46,151,.06)}
+  .tagx.y{color:var(--yel);border-color:var(--yel);background:rgba(249,240,2,.05)}
+  .blurb{margin:40px 0 8px;position:relative;background:linear-gradient(180deg, rgba(12,17,32,.9), rgba(8,11,22,.9));border:1px solid var(--line);border-left:3px solid var(--mag);padding:30px 34px;max-width:900px;clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px))}
+  .blurb .hdr{font-family:'Share Tech Mono',monospace;font-size:.74rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:0 0 14px}
   .blurb .hdr b{color:var(--cyan)}
-  .blurb p{margin:0 0 14px; font-size:1.08rem; color:var(--ink)}
+  .blurb p{margin:0 0 14px;font-size:1.1rem;color:#c7d6ec}
   .blurb p:last-child{margin-bottom:0}
-  .blurb .lead{font-size:1.2rem; color:#fbf3e2}
-  .blurb em{font-style:normal; color:var(--amber); font-weight:700}
-  .blurb .pz{color:var(--rose); font-weight:700}
-
-  /* section head */
-  .sechead{display:flex; align-items:baseline; gap:16px; margin:70px 0 6px; flex-wrap:wrap}
-  .sechead h2{font-family:'Fraunces',serif; font-weight:600; font-size:clamp(1.7rem,4.4vw,2.5rem);
-    margin:0; color:#fbf3e2; letter-spacing:.01em}
-  .sechead h2 span{color:var(--amber)}
-  .sechead .meta{font-family:'Share Tech Mono',monospace; font-size:.76rem; color:var(--dim); letter-spacing:.12em}
-
-  /* grid + cards */
-  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:26px; margin-top:26px}
-  .card{clip-path:none !important; border-radius:20px; position:relative;
-    background:var(--glass); border:1px solid var(--line); overflow:hidden;
-    box-shadow:var(--shadow); backdrop-filter:blur(3px);
-    display:flex; flex-direction:column; transition:transform .35s ease, box-shadow .35s ease}
-  .card:hover{transform:translateY(-6px); box-shadow:0 30px 66px -28px rgba(244,184,96,.4)}
-  .card .bracket{position:absolute; width:18px; height:18px; z-index:3; pointer-events:none; opacity:.6; border-radius:3px}
-  .card .bracket.tl{top:10px; left:10px; border-top:2px solid var(--amber); border-left:2px solid var(--amber)}
-  .card .bracket.br{bottom:10px; right:10px; border-bottom:2px solid var(--cyan); border-right:2px solid var(--cyan)}
-
-  .frame{position:relative; width:100%; aspect-ratio:5/3; overflow:hidden;
-    background:#141a2e; border-bottom:1px solid var(--line)}
-  .frame .render{position:absolute; inset:0; width:100%; height:100%; z-index:1; opacity:.92}
-  .frame::after{content:""; position:absolute; inset:0; z-index:3; pointer-events:none;
-    background:linear-gradient(120deg, rgba(244,184,96,.18), rgba(131,214,205,.18));
-    mix-blend-mode:screen; opacity:.7}
-  .frame.has-video{background:#141a2e}
-  .frame .yt{position:absolute; inset:0; width:100%; height:100%; border:0; z-index:6}
-  .frame .playlink{position:absolute; inset:0; z-index:2; display:block; overflow:hidden}
-  .frame .thumb{width:100%; height:100%; object-fit:cover; transition:transform .4s ease; filter:saturate(1.04) contrast(1.02)}
+  .blurb .lead{font-size:1.2rem;color:#eafcff}
+  .blurb em{font-style:normal;color:var(--cyan);font-weight:700}
+  .blurb .pz{color:var(--mag);font-weight:700}
+  .sechead{display:flex;align-items:baseline;gap:16px;margin:74px 0 6px;flex-wrap:wrap}
+  .sechead h2{font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(1.7rem,4.4vw,2.6rem);margin:0;color:#eafcff;letter-spacing:.04em}
+  .sechead h2 span{color:var(--mag)}
+  .sechead .meta{font-family:'Share Tech Mono',monospace;font-size:.76rem;color:var(--dim);letter-spacing:.14em}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;margin-top:26px}
+  .card{position:relative;background:var(--panel);border:1px solid var(--line);clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));display:flex;flex-direction:column;transition:transform .3s ease, box-shadow .3s ease}
+  .card:hover{transform:translateY(-6px);box-shadow:0 0 0 1px var(--cyan),0 24px 60px -24px rgba(0,230,255,.5)}
+  .card .bracket{position:absolute;width:20px;height:20px;z-index:3;pointer-events:none}
+  .card .bracket.tl{top:8px;left:8px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
+  .card .bracket.br{bottom:8px;right:8px;border-bottom:2px solid var(--mag);border-right:2px solid var(--mag)}
+  .frame{position:relative;width:100%;aspect-ratio:5/3;overflow:hidden;background:#070b14;border-bottom:1px solid var(--line)}
+  .frame .render{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+  .frame::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(120deg, rgba(255,46,151,.42), rgba(0,230,255,.42)),repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.35) 2px 3px);mix-blend-mode:screen;opacity:.8}
+  .frame.has-video{background:#000}
+  .frame .yt{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:6}
+  .frame .playlink{position:absolute;inset:0;z-index:2;display:block;overflow:hidden}
+  .frame .thumb{width:100%;height:100%;object-fit:cover;transition:transform .35s ease;filter:contrast(1.05)}
   .frame .playlink:hover .thumb{transform:scale(1.05)}
-  .frame .playbtn{position:absolute; z-index:5; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:66px; height:66px; border-radius:50%; border:2px solid var(--amber);
-    background:rgba(24,20,32,.5); box-shadow:0 0 26px -2px rgba(244,184,96,.8); transition:.25s}
-  .frame .playbtn::after{content:""; position:absolute; top:50%; left:55%; transform:translate(-50%,-50%);
-    border-style:solid; border-width:12px 0 12px 20px; border-color:transparent transparent transparent var(--amber)}
-  .frame .playlink:hover .playbtn{background:var(--amber); box-shadow:0 0 36px 2px rgba(244,184,96,.9)}
-  .frame .playlink:hover .playbtn::after{border-left-color:#20182a}
-  .frame.has-video::after{background:linear-gradient(120deg, rgba(244,184,96,.2), rgba(131,214,205,.2)); opacity:.55; mix-blend-mode:screen}
-  .frame .logo{position:absolute; z-index:4; right:10px; bottom:10px; width:66px; height:66px; overflow:hidden;
-    border-radius:14px; background:rgba(24,20,32,.55); border:1px solid rgba(244,184,96,.5);
-    box-shadow:0 0 16px -4px rgba(244,184,96,.7); display:flex; align-items:center; justify-content:center}
-  .frame .logo img{width:100%; height:100%; object-fit:cover; transform:scale(1.18)}
-  .frame .logo.wide{width:164px; height:54px; border-radius:12px}
-  .frame .logo.wide .bg-mark{width:100%; height:100%}
-  .frame .idtag{position:absolute; z-index:4; left:10px; top:10px; border-radius:7px;
-    font-family:'Share Tech Mono',monospace; font-size:.68rem; letter-spacing:.1em;
-    color:var(--amber); background:rgba(24,20,32,.6); padding:4px 9px; border:1px solid rgba(244,184,96,.4)}
-
+  .frame .playbtn{position:absolute;z-index:5;top:50%;left:50%;transform:translate(-50%,-50%);width:66px;height:66px;border-radius:50%;border:2px solid var(--cyan);background:rgba(3,6,14,.5);box-shadow:0 0 24px -4px var(--cyan);transition:.25s}
+  .frame .playbtn::after{content:"";position:absolute;top:50%;left:55%;transform:translate(-50%,-50%);border-style:solid;border-width:12px 0 12px 20px;border-color:transparent transparent transparent var(--cyan)}
+  .frame .playlink:hover .playbtn{background:var(--cyan);box-shadow:0 0 34px 0 var(--cyan)}
+  .frame .playlink:hover .playbtn::after{border-left-color:#05060d}
+  .frame.has-video::after{background:linear-gradient(120deg, rgba(255,46,151,.32), rgba(0,230,255,.32)),repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.3) 2px 3px);opacity:.72;mix-blend-mode:screen}
+  .frame .logo{position:absolute;z-index:4;right:10px;bottom:10px;width:68px;height:68px;overflow:hidden;background:rgba(3,6,14,.62);border:1px solid var(--cyan);box-shadow:0 0 14px -4px var(--cyan);display:flex;align-items:center;justify-content:center}
+  .frame .logo img{width:100%;height:100%;object-fit:cover;transform:scale(1.18)}
+  .frame .logo.wide{width:164px;height:54px}
+  .frame .logo.wide .bg-mark{width:100%;height:100%}
+  .frame .idtag{position:absolute;z-index:4;left:10px;top:10px;font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.12em;color:var(--yel);background:rgba(3,6,14,.7);padding:3px 8px;border:1px solid rgba(249,240,2,.4)}
   .cbody{padding:18px 22px 24px}
-  .kick{font-family:'Share Tech Mono',monospace; font-size:.72rem; letter-spacing:.13em; text-transform:uppercase; color:var(--cyan); margin:0 0 4px}
-  .card h3{font-family:'Fraunces',serif; font-weight:600; font-size:1.55rem; margin:0 0 3px; color:#fbf3e2}
-  .where{font-family:'Share Tech Mono',monospace; font-size:.76rem; color:var(--dim); margin:0 0 12px}
-  .desc{margin:0 0 16px; font-size:1.02rem; color:var(--ink)}
-  a.visit{clip-path:none !important; border-radius:999px; display:inline-flex; align-items:center; gap:9px;
-    text-decoration:none; font-family:'Share Tech Mono',monospace; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase;
-    color:var(--amber); border:1px solid var(--amber); padding:9px 16px; transition:.22s}
-  a.visit:hover{background:var(--amber); color:#20182a; box-shadow:0 0 22px -2px rgba(244,184,96,.8)}
-
-  /* footer */
-  footer{margin:78px 0 46px}
-  .terminal{clip-path:none !important; border-radius:20px; max-width:640px; margin:0 auto;
-    background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow); backdrop-filter:blur(3px); overflow:hidden}
-  .terminal .bar{display:flex; align-items:center; gap:8px; padding:10px 15px; border-bottom:1px solid var(--line);
-    font-family:'Share Tech Mono',monospace; font-size:.7rem; color:var(--dim); letter-spacing:.12em}
-  .terminal .bar .dot{width:9px; height:9px; border-radius:50%}
-  .terminal .bar .r{background:var(--rose)} .terminal .bar .y{background:var(--amber)} .terminal .bar .g{background:var(--cyan)}
-  .terminal .body{padding:24px 26px 28px}
-  .terminal .body .line{font-family:'Share Tech Mono',monospace; color:var(--dim); margin:0 0 8px; font-size:.9rem}
+  .kick{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin:0 0 4px}
+  .card h3{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1.5rem;margin:0 0 3px;color:#eafcff;letter-spacing:.02em}
+  .where{font-family:'Share Tech Mono',monospace;font-size:.76rem;color:var(--dim);margin:0 0 12px}
+  .desc{margin:0 0 16px;font-size:1.02rem;color:#b9c8e2}
+  a.visit{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--yel);border:1px solid var(--yel);padding:8px 14px;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);transition:background .2s,color .2s,box-shadow .2s}
+  a.visit:hover{background:var(--yel);color:#05060d;box-shadow:0 0 20px rgba(249,240,2,.5)}
+  footer{margin:80px 0 46px}
+  .terminal{max-width:640px;margin:0 auto;background:#070b14;border:1px solid var(--line);box-shadow:0 0 40px -18px rgba(0,230,255,.6);clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+  .terminal .bar{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line);font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);letter-spacing:.14em}
+  .terminal .bar .dot{width:9px;height:9px;border-radius:50%}
+  .terminal .bar .r{background:var(--mag)} .terminal .bar .y{background:var(--yel)} .terminal .bar .g{background:var(--cyan)}
+  .terminal .body{padding:24px 26px 28px;font-family:'Share Tech Mono',monospace;font-size:.92rem}
+  .terminal .body .line{color:var(--dim);margin:0 0 8px}
   .terminal .body .line .c{color:var(--cyan)}
-  .terminal .body h4{font-family:'Fraunces',serif; color:var(--amber); font-size:1.7rem; margin:6px 0 12px; font-weight:600}
-  .terminal .body .cursor{display:inline-block; width:9px; height:1em; background:var(--amber); vertical-align:-2px; animation:glow 1.6s ease-in-out infinite}
-  .foot-links{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
-  .foot-links a{clip-path:none; border-radius:999px; text-decoration:none;
-    font-family:'Share Tech Mono',monospace; font-size:.82rem; letter-spacing:.06em;
-    color:var(--cyan); border:1px solid rgba(131,214,205,.5); padding:9px 16px; background:rgba(131,214,205,.06); transition:.2s}
-  .foot-links a:hover{background:var(--cyan); color:#20182a}
-  .foot-links a.m{color:var(--rose); border-color:rgba(232,138,154,.5); background:rgba(232,138,154,.06)}
-  .foot-links a.m:hover{background:var(--rose); color:#20182a}
-
-  @media (max-width:760px){.grid{grid-template-columns:1fr} .blurb{padding:24px 20px}}
+  .terminal .body h4{font-family:'Orbitron',sans-serif;color:var(--yel);font-size:1.5rem;margin:6px 0 14px;letter-spacing:.06em}
+  .terminal .body .cursor{display:inline-block;width:9px;height:1.05em;background:var(--yel);vertical-align:-2px;animation:blink 1.05s steps(1) infinite}
+  .foot-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+  .foot-links a{text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:.82rem;letter-spacing:.08em;color:var(--cyan);border:1px solid var(--cyan);padding:9px 16px;background:rgba(0,230,255,.05);transition:background .2s,color .2s}
+  .foot-links a:hover{background:var(--cyan);color:#05060d}
+  .foot-links a.m{color:var(--mag);border-color:var(--mag);background:rgba(255,46,151,.05)}
+  .foot-links a.m:hover{background:var(--mag);color:#05060d}
+  @media (max-width:760px){.grid{grid-template-columns:1fr} .blurb{padding:24px 20px} header.hero{padding-top:36px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="statusbar">
-    <span><span class="live">◉ ONLINE</span> &nbsp;//&nbsp; lantern.net · dusk build</span>
-    <span>◍ node: brooklyn</span>
+    <span><span class="live">◉ ONLINE</span> &nbsp;//&nbsp; neuro.stack v15.0</span>
+    <span>SYS <span class="blink">▮</span> node: brooklyn</span>
   </div>
 
   <!-- ============ HERO ============ -->
@@ -277,7 +203,7 @@
         <p class="kick">Implantable BCI · Brown</p>
         <h3>BrainGate</h3>
         <p class="where">// NEUROENGINEER · BRAINGATE TEAM · 2015–2021</p>
-        <p class="desc">I was a neuroengineer prototyping neural dust for brain-to-brain communication: FPGA-accelerated decoders for networks of wireless electrodes, neuromorphic RF communication algorithms, and microscale neural recording hardware. As a computational-neuroscience researcher I studied personalized noninvasive neurostimulation — biophysics simulations of pulsed ultrasound and magnetic stimulation of epileptiform cortex for precision seizure suppression — and contributed to models of sensorimotor and auditory decoding and speech generation. My work propagates through some of the BrainGate clinical trials.</p>
+        <p class="desc">A neuroengineer prototyping neural dust for brain-to-brain communication: FPGA-accelerated decoders for networks of wireless electrodes, neuromorphic RF communication algorithms, and microscale neural recording hardware. As a computational-neuroscience researcher I studied personalized noninvasive neurostimulation — biophysics simulations of pulsed ultrasound and magnetic stimulation of epileptiform cortex for precision seizure suppression — and contributed to models of sensorimotor and auditory decoding and speech generation. My work propagates through some of the BrainGate clinical trials.</p>
         <a class="visit" href="https://www.braingate.org" target="_blank" rel="noopener">ACCESS ▸</a>
       </div>
     </article>
@@ -317,7 +243,7 @@
         <p class="kick">Ultrasound-on-chip · 4Catalyzer</p>
         <h3>Butterfly Network</h3>
         <p class="where">// EMBEDDED ML ENGINEER · 4CATALYZER · 2019–2022</p>
-        <p class="desc">I was a researcher at a medtech consortium developing novel algorithms, devices, and models for miniaturized brain and biomedical imaging. At 454 Bio, I built physics-informed data-augmentation models for in-vivo protein quantification, low-field MRI, and ultrasonic intracranial-pressure monitoring, plus sensor-fusion for multimodal seizure detection. At Tesseract Health &amp; Quantum-Si, I engineered hardware-accelerated imaging pipelines and classifiers for automated detection of diabetic retinopathy, glaucoma, and Alzheimer's. At Hyperfine &amp; Liminal Sciences, I developed a transcranial-Doppler suite for point-of-care MRI — MEMS ultrasound driver boards and beamsteering for vessel localization. At Butterfly Network, I designed wearable whole-brain ultrasonic neuromodulation: CUDA beamforming kernels, driver boards, and Jetson firmware. My work is distributed throughout the Butterfly Garden.</p>
+        <p class="desc">A researcher at a medtech consortium developing novel algorithms, devices, and models for miniaturized brain and biomedical imaging. At 454 Bio, I built physics-informed data-augmentation models for in-vivo protein quantification, low-field MRI, and ultrasonic intracranial-pressure monitoring, plus sensor-fusion for multimodal seizure detection. At Tesseract Health &amp; Quantum-Si, I engineered hardware-accelerated imaging pipelines and classifiers for automated detection of diabetic retinopathy, glaucoma, and Alzheimer's. At Hyperfine &amp; Liminal Sciences, I developed a transcranial-Doppler suite for point-of-care MRI — MEMS ultrasound driver boards and beamsteering for vessel localization. At Butterfly Network, I designed wearable whole-brain ultrasonic neuromodulation: CUDA beamforming kernels, driver boards, and Jetson firmware. My work is distributed throughout the Butterfly Garden.</p>
         <a class="visit" href="https://www.butterflynetwork.com" target="_blank" rel="noopener">ACCESS ▸</a>
       </div>
     </article>
@@ -344,7 +270,7 @@
         <p class="kick">Conformable µECoG</p>
         <h3>Neurosoft Bioelectronics</h3>
         <p class="where">// SR. EMBEDDED SYSTEMS ENGINEER · 2025–PRESENT</p>
-        <p class="desc">I am an embedded systems and electrical engineer working on neural recording and communications systems in extremely flexible micro-ECoG arrays for high-density, deep sulcal access and full cortical coverage. I work on integrating Neurosoft's electrode materials with the Science recording ecosystem, full-scale AI-driven decoding pipelines, and firmware development across the stack.</p>
+        <p class="desc">I'm an embedded systems and electrical engineer working on neural recording and communications systems in extremely flexible micro-ECoG arrays for high-density, deep sulcal access and full cortical coverage. I work on integrating Neurosoft's electrode materials with the Science recording ecosystem, full-scale AI-driven decoding pipelines, and firmware development across the stack.</p>
         <a class="visit" href="https://www.neurosoftbio.com" target="_blank" rel="noopener">ACCESS ▸</a>
       </div>
     </article>
