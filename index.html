@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FLORENCE // neural interfaces · assistive design · cognitive augmentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Chakra+Petch:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#05060d;
+    --bg2:#0a0e1a;
+    --panel:#0c1120;
+    --cyan:#00e6ff;
+    --mag:#ff2e97;
+    --yel:#f9f002;
+    --purp:#7b5cff;
+    --ink:#cfe9ff;
+    --dim:#6d7ba3;
+    --line:rgba(0,230,255,.22);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Rajdhani',system-ui,sans-serif;
+    line-height:1.55;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* neon atmosphere */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(760px 520px at 8% -6%, rgba(255,46,151,.20), transparent 60%),
+      radial-gradient(820px 560px at 100% 4%, rgba(0,230,255,.18), transparent 60%),
+      radial-gradient(900px 700px at 50% 116%, rgba(123,92,255,.18), transparent 60%);
+  }
+  /* scanlines + grid */
+  body::after{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.28) 2px 3px),
+      linear-gradient(rgba(0,230,255,.05) 1px, transparent 1px) 0 0/44px 44px,
+      linear-gradient(90deg, rgba(0,230,255,.05) 1px, transparent 1px) 0 0/44px 44px;
+    mix-blend-mode:screen;
+  }
+  .wrap{position:relative; z-index:1; max-width:1120px; margin:0 auto; padding:0 20px}
+
+  /* top status bar */
+  .statusbar{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'Share Tech Mono',monospace; font-size:.72rem; letter-spacing:.12em;
+    color:var(--dim); text-transform:uppercase;
+    padding:14px 4px; border-bottom:1px solid var(--line);
+  }
+  .statusbar .live{color:var(--cyan)}
+  .statusbar .blink{color:var(--yel); animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ---------- HERO ---------- */
+  header.hero{padding:58px 0 30px; position:relative}
+  .eyebrow{
+    font-family:'Share Tech Mono',monospace; font-size:.78rem; letter-spacing:.28em;
+    color:var(--cyan); text-transform:uppercase; margin:0 0 14px;
+  }
+  .eyebrow::before{content:"▍ "; color:var(--mag)}
+  h1.name{
+    font-family:'Orbitron',sans-serif; font-weight:900;
+    font-size:clamp(3.4rem,13vw,8.2rem); line-height:.9; margin:0;
+    letter-spacing:.02em; color:#eafcff; position:relative; display:inline-block;
+    text-shadow:0 0 18px rgba(0,230,255,.35);
+  }
+  /* glitch */
+  .glitch{position:relative}
+  .glitch::before,.glitch::after{
+    content:attr(data-txt); position:absolute; left:0; top:0; width:100%;
+    clip-path:inset(0 0 0 0);
+  }
+  .glitch::before{color:var(--mag); transform:translate(3px,0); animation:gl1 3.2s infinite linear alternate; mix-blend-mode:screen}
+  .glitch::after{color:var(--cyan); transform:translate(-3px,0); animation:gl2 2.7s infinite linear alternate; mix-blend-mode:screen}
+  @keyframes gl1{0%{clip-path:inset(0 0 82% 0)}20%{clip-path:inset(40% 0 40% 0)}40%{clip-path:inset(78% 0 4% 0)}60%{clip-path:inset(10% 0 66% 0)}80%{clip-path:inset(54% 0 22% 0)}100%{clip-path:inset(30% 0 50% 0)}}
+  @keyframes gl2{0%{clip-path:inset(70% 0 12% 0)}25%{clip-path:inset(16% 0 62% 0)}50%{clip-path:inset(46% 0 30% 0)}75%{clip-path:inset(4% 0 80% 0)}100%{clip-path:inset(60% 0 8% 0)}}
+  .subline{
+    margin:20px 0 0; font-size:1.28rem; max-width:44ch; color:var(--ink);
+    font-weight:500;
+  }
+  .subline b{color:var(--yel); font-weight:700}
+  .roles{display:flex; flex-wrap:wrap; gap:10px; margin-top:22px}
+  .tagx{
+    font-family:'Share Tech Mono',monospace; font-size:.74rem; letter-spacing:.1em;
+    text-transform:uppercase; padding:7px 14px; color:var(--cyan);
+    border:1px solid var(--cyan); background:rgba(0,230,255,.06);
+    clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  }
+  .tagx.m{color:var(--mag); border-color:var(--mag); background:rgba(255,46,151,.06)}
+  .tagx.y{color:var(--yel); border-color:var(--yel); background:rgba(249,240,2,.05)}
+
+  /* ---------- BLURB ---------- */
+  .blurb{
+    margin:40px 0 8px; position:relative;
+    background:linear-gradient(180deg, rgba(12,17,32,.9), rgba(8,11,22,.9));
+    border:1px solid var(--line);
+    border-left:3px solid var(--mag);
+    padding:30px 34px; max-width:900px;
+    clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px));
+  }
+  .blurb .hdr{font-family:'Share Tech Mono',monospace; font-size:.74rem; letter-spacing:.2em; color:var(--dim); text-transform:uppercase; margin:0 0 14px}
+  .blurb .hdr b{color:var(--cyan)}
+  .blurb p{margin:0 0 14px; font-size:1.1rem; color:#c7d6ec}
+  .blurb p:last-child{margin-bottom:0}
+  .blurb .lead{font-size:1.2rem; color:#eafcff}
+  .blurb em{font-style:normal; color:var(--cyan); font-weight:700}
+  .blurb .pz{color:var(--mag); font-weight:700}
+
+  /* ---------- SECTION HEAD ---------- */
+  .sechead{display:flex; align-items:baseline; gap:16px; margin:74px 0 6px; flex-wrap:wrap}
+  .sechead h2{
+    font-family:'Orbitron',sans-serif; font-weight:700; font-size:clamp(1.7rem,4.4vw,2.6rem);
+    margin:0; color:#eafcff; letter-spacing:.04em;
+  }
+  .sechead h2 span{color:var(--mag)}
+  .sechead .meta{font-family:'Share Tech Mono',monospace; font-size:.76rem; color:var(--dim); letter-spacing:.14em}
+
+  /* ---------- GRID ---------- */
+  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:26px; margin-top:26px}
+  .card{
+    position:relative; background:var(--panel);
+    border:1px solid var(--line);
+    clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));
+    display:flex; flex-direction:column;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .card:hover{transform:translateY(-6px); box-shadow:0 0 0 1px var(--cyan),0 24px 60px -24px rgba(0,230,255,.5)}
+  /* neon corner brackets */
+  .card .bracket{position:absolute; width:20px; height:20px; z-index:3; pointer-events:none}
+  .card .bracket.tl{top:8px; left:8px; border-top:2px solid var(--cyan); border-left:2px solid var(--cyan)}
+  .card .bracket.br{bottom:8px; right:8px; border-bottom:2px solid var(--mag); border-right:2px solid var(--mag)}
+
+  .frame{position:relative; width:100%; aspect-ratio:5/3; overflow:hidden; background:#070b14; border-bottom:1px solid var(--line)}
+  .frame .render{position:absolute; inset:0; width:100%; height:100%; z-index:1}
+  .frame .shot{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:2;
+    filter:grayscale(1) contrast(1.15) brightness(.92);
+  }
+  /* duotone + scanline overlay on the photo zone */
+  .frame::after{
+    content:""; position:absolute; inset:0; z-index:3; pointer-events:none;
+    background:
+      linear-gradient(120deg, rgba(255,46,151,.42), rgba(0,230,255,.42)),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.35) 2px 3px);
+    mix-blend-mode:screen; opacity:.8;
+  }
+  .frame .logo{
+    position:absolute; z-index:4; right:10px; bottom:10px;
+    width:68px; height:68px; overflow:hidden;
+    background:rgba(3,6,14,.62); border:1px solid var(--cyan);
+    box-shadow:0 0 14px -4px var(--cyan);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .frame .logo img{width:100%; height:100%; object-fit:cover; transform:scale(1.18)}
+  .frame .logo.wide{width:164px; height:54px}
+  .frame .logo.wide .bg-mark{width:100%; height:100%}
+  .frame.has-video{background:#000}
+  .frame .yt{position:absolute; inset:0; width:100%; height:100%; border:0; z-index:6}
+  .frame .playlink{position:absolute; inset:0; z-index:2; display:block; overflow:hidden}
+  .frame .thumb{width:100%; height:100%; object-fit:cover; transition:transform .35s ease; filter:contrast(1.05)}
+  .frame .playlink:hover .thumb{transform:scale(1.05)}
+  .frame .playbtn{
+    position:absolute; z-index:5; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:66px; height:66px; border-radius:50%; border:2px solid var(--cyan);
+    background:rgba(3,6,14,.5); box-shadow:0 0 24px -4px var(--cyan); transition:.25s;
+  }
+  .frame .playbtn::after{
+    content:""; position:absolute; top:50%; left:55%; transform:translate(-50%,-50%);
+    border-style:solid; border-width:12px 0 12px 20px; border-color:transparent transparent transparent var(--cyan);
+  }
+  .frame .playlink:hover .playbtn{background:var(--cyan); box-shadow:0 0 34px 0 var(--cyan)}
+  .frame .playlink:hover .playbtn::after{border-left-color:#05060d}
+  .frame.has-video::after{
+    background:linear-gradient(120deg, rgba(255,46,151,.32), rgba(0,230,255,.32)),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.3) 2px 3px);
+    opacity:.72; mix-blend-mode:screen;
+  }
+  .frame .idtag{
+    position:absolute; z-index:4; left:10px; top:10px;
+    font-family:'Share Tech Mono',monospace; font-size:.68rem; letter-spacing:.12em;
+    color:var(--yel); background:rgba(3,6,14,.7); padding:3px 8px; border:1px solid rgba(249,240,2,.4);
+  }
+
+  .cbody{padding:18px 22px 24px}
+  .kick{font-family:'Share Tech Mono',monospace; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); margin:0 0 4px}
+  .card h3{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:1.5rem; margin:0 0 3px; color:#eafcff; letter-spacing:.02em}
+  .where{font-family:'Share Tech Mono',monospace; font-size:.76rem; color:var(--dim); margin:0 0 12px}
+  .desc{margin:0 0 16px; font-size:1.02rem; color:#b9c8e2}
+  a.visit{
+    display:inline-flex; align-items:center; gap:9px; text-decoration:none;
+    font-family:'Share Tech Mono',monospace; font-size:.8rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--yel); border:1px solid var(--yel); padding:8px 14px;
+    clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
+    transition:background .2s,color .2s,box-shadow .2s;
+  }
+  a.visit:hover{background:var(--yel); color:#05060d; box-shadow:0 0 20px rgba(249,240,2,.5)}
+
+  /* ---------- FOOTER ---------- */
+  footer{margin:80px 0 46px}
+  .terminal{
+    max-width:640px; margin:0 auto; background:#070b14;
+    border:1px solid var(--line); box-shadow:0 0 40px -18px rgba(0,230,255,.6);
+    clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));
+  }
+  .terminal .bar{
+    display:flex; align-items:center; gap:8px; padding:9px 14px; border-bottom:1px solid var(--line);
+    font-family:'Share Tech Mono',monospace; font-size:.7rem; color:var(--dim); letter-spacing:.14em;
+  }
+  .terminal .bar .dot{width:9px; height:9px; border-radius:50%}
+  .terminal .bar .r{background:var(--mag)} .terminal .bar .y{background:var(--yel)} .terminal .bar .g{background:var(--cyan)}
+  .terminal .body{padding:24px 26px 28px; font-family:'Share Tech Mono',monospace; font-size:.92rem}
+  .terminal .body .line{color:var(--dim); margin:0 0 8px}
+  .terminal .body .line .c{color:var(--cyan)}
+  .terminal .body h4{font-family:'Orbitron',sans-serif; color:var(--yel); font-size:1.5rem; margin:6px 0 14px; letter-spacing:.06em}
+  .terminal .body .cursor{display:inline-block; width:9px; height:1.05em; background:var(--yel); vertical-align:-2px; animation:blink 1.05s steps(1) infinite}
+  .foot-links{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
+  .foot-links a{
+    text-decoration:none; font-family:'Share Tech Mono',monospace; font-size:.82rem; letter-spacing:.08em;
+    color:var(--cyan); border:1px solid var(--cyan); padding:9px 16px; background:rgba(0,230,255,.05);
+    transition:background .2s,color .2s;
+  }
+  .foot-links a:hover{background:var(--cyan); color:#05060d}
+  .foot-links a.m{color:var(--mag); border-color:var(--mag); background:rgba(255,46,151,.05)}
+  .foot-links a.m:hover{background:var(--mag); color:#05060d}
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:1fr}
+    .blurb{padding:24px 20px}
+    header.hero{padding-top:36px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="statusbar">
+    <span><span class="live">◉ ONLINE</span> &nbsp;//&nbsp; neuro.stack v15.0</span>
+    <span>SYS <span class="blink">▮</span> node: brooklyn</span>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <p class="eyebrow">Neuroengineer // designer // storyteller</p>
+    <h1 class="name glitch" data-txt="FLORENCE">FLORENCE</h1>
+    <p class="subline"><b>Brainy</b> <b>BCI</b> <b>Beb</b></p>
+    <div class="roles">
+      <span class="tagx">NEURAL INTERFACES</span>
+      <span class="tagx m">ASSISTIVE DESIGN</span>
+      <span class="tagx y">COGNITIVE AUGMENTATION</span>
+    </div>
+  </header>
+
+  <!-- ============ BLURB ============ -->
+  <section class="blurb">
+    <p class="hdr">&gt; <b>cat</b> ./about/florence.md</p>
+    <p class="lead">Hi, I’m Florence! As a child in a philosophy lecture, I never thought I’d end up in the lab — but my obsession with <span class="pz">p-zombies</span> led me through neurobiology and computational neuroscience, into the world of neural interfaces, assistive design, and cognitive augmentation.</p>
+    <p>I make all sorts of doodads. From cognitive-enhancement wearables, brain-to-brain communication implants, and biomimetic prosthetic limbs, to sundial sculptures, smart furniture, and artificial senses — I love bringing insights from one field into another.</p>
+    <p>My research interests lie in <em>multiscale neural recording</em> and <em>edge ML as a compression method for wireless BCI</em>. I’ve been extremely fortunate to work alongside some of the best teams in neurotechnology and nanoscience, with contributions to multiple implant studies and novel neural-imaging modalities — from PCBs and neural decoding for BrainGate and Synchron’s clinical trials, to beamforming and spline interpolation for the Butterfly Garden.</p>
+    <p>An avid 3D-printing fan, and a rabid TTRPG one. Let’s chat!</p>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <div class="sechead">
+    <h2>PROJECT<span>_</span>ARCHIVE</h2>
+    <span class="meta">// 06 builds indexed · neurotech + nanoscience</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- ===== OpenBCI ===== -->
+    <article class="card">
+      <span class="bracket tl"></span><span class="bracket br"></span>
+      <div class="frame has-video">
+        <a class="playlink" data-vid="4P5JcA0tB9w" href="https://www.youtube.com/watch?v=4P5JcA0tB9w" target="_blank" rel="noopener" aria-label="Play OpenBCI on YouTube">
+          <img class="thumb" src="https://img.youtube.com/vi/4P5JcA0tB9w/hqdefault.jpg" alt="OpenBCI" loading="lazy"/>
+          <span class="playbtn"></span>
+        </a>
+        <span class="logo"><img alt="OpenBCI" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wgARCABkAGQDASIAAhEBAxEB/8QAHQABAAIDAAMBAAAAAAAAAAAAAAcIBAUGAQIDCf/EABkBAAMBAQEAAAAAAAAAAAAAAAAEBQIDAf/aAAwDAQACEAMQAAABtSAHLaz1PwpF0NGdYju6ASlvFrVT7YIvAuwADlNZr1yvib70HmOqijCxuR8biPHvnz9e35feJ4kaBJxj2MoLMqM3dqHUmdJzvXR44lq8jZY7HDH3ev8ATPuykKMc/l14ezcWznx7SCIlvgqefoBU2tJ7SCbGR734cZl5/wAmF9Fm52u152/TzrkRbNW9Tp7VvI9OIlvxU22ZhenliqxdhUl5uFPOOqztt95TqKPvaotBDPsxkySATqIBG3BWG1rStGZLknZ0Z0Z8ftLDhUyyPtKSzOh3xOoB5oAAAAAAAAA//8QAIxAAAgMBAAICAgMBAAAAAAAABAUCAwYBAAcQIBEUFSEwQP/aAAgBAQABBQL633QGpQbMDRE/46g7q3PpdOeiK0W9NfiLj7lZp3s9kUJ64a3R0v21WocAaYx241loXrsVaJVLLChCaZSf1oBlSCXeSYZqdu/eWV4JiWzz/wAm6tQvk6LnrNLTQLhlLGRxJAvBl0u0208j29aOkeys81ubpFpwewXjJxi6TK/jTJbUTfFU0pUxkrB/BAYQaS4fUF+yS5oLrEoZ2EMBgMa0GbCswJrGHrRNeuVeEEVCU7zQ0aBoxPirT2fqjBQnc2IpvcDdBsEZ1mKKuh00gH1ZqNQ2j9nC8o0mQ0wjpf5s89bo1JwBC0nSG2UJw1sjhrTu+QmUh8u6NOQsakJDLHnsqsnjj6X/ALWnzrvF5M9gf8ezTxzHuZ5HSYmSqKom9CFXRSuurgXb0JipUsNPcPREajzcseMtNmTaDkXnf74z9buKbsToO5txoM5B3wrNmLQ0Six6WpTUqQPx+PjaaSOfVqc6xfeYPNmZ0X53FsLtTjd71VF1d/JZzJLugKvjS7ILPVtWpDk315OE8r9DfX6k9htMKAApXODVFgvtJrTyftg7vGO9cso5pN3Qub/WqW2tKmHQgfViDBmAk9aBLr9bjRWizGY65qzYZBUxDymHjmjP+H//xAAmEQACAQMDBAIDAQAAAAAAAAABAgADBBESITEQEyJBFCMwMlFh/9oACAEDAQE/AYx0jM+cmnPuUr4afs5lGr3l1dSwXmANVZvLxgdU2VZ3CRhhGUqNVE7Sg4amN+l9p0DPMfxUIPUwBN8Z5lNirj+S2RUrkH1x0vqS47nuVU14f0ZhszG+3MW1QNqlNFr3DE9KtBa37SjVVCaNTifHXuADiAAbCXNyKY0rzLa3VQKnvq9vTZTgbxLe4RMg4/yIlxXTOqW9sFT7BvAAowPw/wD/xAAmEQACAQMDBAIDAQAAAAAAAAABAgADBBESITEQEyJBFCMwMlFh/9oACAECAQE/AYo1HE+A+rGdpVsTq+viV6Jotp6hS3AhK0lXx8oUZ92adsA5QxWDNorDeXCFah26WGrWccRPJi59zJM2zjiVFDIf7Ll2e3BHvnpY1Wz2/UpPoynsTUuJnx34jXbldMqO1C3UDpRrtR/WVqTOBXp8z5Ddsk8wkk5MtbY1DqbiXNyzE0/XWncVFYZO0e4t6j4Iz/sd7eg+NMuLos/1naEljk/h/8QAQBAAAgECAwUDCQUECwAAAAAAAQIDBBEAEiEFEzFBURQicRAgIzJCYYGRoQZSscHhJGLR8BUwM0BDgpKywvHy/9oACAEBAAY/AvNeWVgkaDMzHkMSQU+9jkQZrSgDMPdr/VV1QrZXEZCkcidB+ODNBMWDG8kcmqv44NLukpoCbsEvdvccRVUDZZYjcY3UUUVLIeMqcfh0xupJnZahWuGa92438dPPrEjrHiWNrIi+rblpiGld3qW9mKNbAnrYY7Xt2sEKDjHGdB8f4YWah2fHtEs+6VFjztmtfXPwwwl+zcKoHWPuiMtdr20sOhwkJjm2cZf7KqjN4X+p/LAqon31Op7tVB7Pj0wE7ZlsLXVFucLNWPvHzlVfmV9/18xlmr4Qy6FVOYj5Ykelh707BI15nkCcPHStBUbXayuXOtyDYWGvLQYnqG2kk2VAs6Tm4Qkera2Xje1sTI1WU2fV06q2W7Fzztp7Ljny8cGi2jtFJaV4syekLbvKvcZfHhbxxR7Ogmjq3qZBOMvC3AAFhoTr9MNWpnETehqKZ2VlkNvW1tfS97e464i2rs0iTZtRyXXdnp4YjoauVKSSEkKW4OCb8cbyCZJ0+9G2YeWanlJcE50kPtr1xW7eqe6R6GA5cxB62/ngcVlRDUCRd0roQ3eLNYGQryNifniCnmZXWVVPEgXZbqD8xh6Q0/Z44UZpN6tidRr3ufqjTEkbNSqilcgldY937kueHXFMFmyz0YRd3ULlSTLzDDkeOtsSf0lHHNF60DyZHOf7w+8Pnh9nVMSqazMjJGQFuFvmCciR007uKikk9aJyvjiSpmJUVRDJF0HX4+RpZpFiiXUs5sBiNqUsYIUyBmFsxvx/DH2f2Y1J2qOSETlALtnOo056k6YSrWSqrN4TBu5u4oy5TY2Oo1GmnDA2lSUyNVwZd5TqtxporAfLTE+9mqYAEMjJUBir+KnFRA1OtJO65mqI0zqFXU932eHEY7YlYk0UcQV2QljvOAFjYgWGKaHfzsaWJnf0XdK+sQNdOYxsuYExyTTXFOBoiNcDW+N4P8aFXPjqPyxBCstquKMLJE2h0HEe7yCCCQJLG+8Abg2h0+uGgqYmhlXirY2DJHAJoGpryMsYLoMi6g+zbXEzRK5mTvfulfHrwxUbNSkp2ErAL2S/r8tefhiXdbyelMQBGbNGHIF841GhvocBamHsMzKG3lOcyEEX1X+HyxBI8yVKTxuWULmiddQt/wDMPhik2lRRLPBIistJou7Xjl5XGH2jtOJIwl8iBgdeVugGKVeYp/8AkcUtdbs9LFIJN4/t2PLyokJzPBHu5G5Xve2EpxujU0+aIGUXAP8A5NsT0VXI+XcNnoaWQvmPG65gAOXU6YZxT1y2AN2fum5AsLxjXX9cdmo6400rPfcsLSE+KXPzsMRQ7UAqSo1mliKlT48XHDjiKnjj9CJCzTbuypfjr+WI4U0SNQo8B5KtlN0jO6X4frfFFJTH0YjCW+6QLW8sjwhKxSSbiTvHxvhoqm6U8p3coPsHrhZ4ZjBUBbbyKwLjpmtcYllqKNFhTOJHzF/RaEDuEFtb8cNBD2WCl3SmSINvAP8ASf8Acb8cLSr31BvqPK2Rv2yYZYl6fvfDDtR05mVTZnJAF/jipFW4vKwIjVrhf5/LzK8xqFAfLp1A1+uFotoEvScEk4mP9MVbUH7XvYiq7o8b6HC50kjkk1KSkFlA0A0A5eVlzCes5QKfx6YeqqnzyN8gOgxS5FCkFg1ut/8ArzZauRJc0hzMivZb9cSV1CrQNBbNHcsGF/fjPR1LwHnlOh+GLSxU8/vKkH6Y7tFTg+8k4Kmp7Oh9mAZfrxxFSM5RWuzuNTbAVUmhYD10k1PzwlJTXyDUluLHr51RSyGyTIUJHLBlq5O3EHuKy2X4jniQ0lNFDWp31MaBc/uOM9bA8VJD3mEi2znpjs5o44R7LwqFZcTVJqe0OylF7lrC/wCn9y//xAAnEAEAAgIBBAIDAAIDAAAAAAABESEAMUFRYXGBEJEgobEw0UDB8P/aAAgBAQABPyH8JxZr9CFrgbwVfC2C1X3/AInMNuhtR7GTQFA/7jvvEQLoKLSPE3rjLTy/D1HslY7qHPYdj+14ULu6ALp7l9/zFP6KhGbJFh3mmGButKPbrKxzYHsPN7D3kloIbTsECy5Nc68aheicvKOFwJGCBpqHMZZvlKKnot/rvlP+QN3liZyLVOilF9TMPX4IHZluNiTZxYkM9AHoCXp6y8XZsoCSDTkbY415xleUFShKInY53X4BaiCxULReGOdeqkM1tRcNCDJ2QgIulVWVTWbehsyBGxEbaQkmQlgVYP8A9lXppyUMUAwlwGV3nBlYn2Hw2dM6nyijXlw9xxXkiAIUhJNobKwQlHxi3ZlLehMOIvqjZkKiEF1kAanaCeh2DXdwMOyEN6COh4d4LFBUu0820gIS8oUTfShtuiHTXTJd88cUAbiXYalyzBy9jT7Lxjcs4Zjzl9B8GeGmDznJQaAFB07umXZ++EpsbBFzxiWoDXRJu6kP0ZZql0IJPZQeoHTWzc54FBRleTHYdYiG47Q+kAXJyeRqTDkgtIIi8kr5wgpauuRIV4yX8Ta5cyXWzSM4TCJh2P8AE4Nq1ioD1PD38FJzvQCTx3ZoXkP2dTuYml4FEDxVJSdMj4CBI0n2sDm+YMdzGsQdHKbSVXWJKuxwyDJRq0e1kn0YIX1ImxGUFxugQ6LNhAwOdOsVc7naSLZbM5Lg1MOsAsDU9qwhaC+/9ODF3FCJIPM6nXzQ0YdR9E357YYQlN8hJuG156ZuykGjrBpxPeYyADiQA0memqcFIZQtVviI9zJIuA6zEUo6GRqN5XRmCZNQdK+uB7CPoEHxGm5vq4bOH+wkvEfAkNT0wRFQwU7pv7yhxyxC0zsyPZctBIELpzB466ckOYE5KnJpSQRcEEqzaa2GSKWahwcow5R6vEvQ4wAAIDg+IcJHK6vD+oymGAVttGai/nQt8s/p+A+LKMSQT3g4fj0afROf3MVQUjsdB6wuL79swSgaDrlv5VMFzQ9Xw/edDSzwg4DK+L9ue3vH4j7LznnpMvnDJhYiBNlEmfWMEbT7BU+8AxvmP7R+s8hkV/TOYIv/ADnvIHM2gBL7aPeQ+wSXuNj6MMiatSna/Jim4BI2eMuadCZ1kZfrtlq9HENxbn+xgCDazpjPHXt5xoLWmnUQ/uR4mVLhnbdP+F//2gAMAwEAAgADAAAAEPPFnXfPOIzS2uPCG+m9wfDgdVHsfLCp35fvPHPQRf8Azzzzzzzz/8QAJhEBAAEDAwMDBQAAAAAAAAAAAREAIVExQWEQceGhsfAwgZHB8f/aAAgBAwEBPxChV6BNDNCYeaktrBrRxiLx1Klgc0jqvZZb4AzS8MMsL3nThx6UwCe4TOIId9RpCw3E7Z5M4otJsE3v0LRWNv3SNgL8KXedTTFAGJhm5j4e9Eorszjji3FLIyoGUdYn3jxS3Xl3fDpqKLDvTp2QPswEen9qKTrtG2trxUrTM7WvtrFqENZIY2mlgsMnMW6FhK2KSKZsOL1JcoS88Se1GgQFOXl+nmp9qieLnUhGU35pFPGU+KSNBsaT+KeRqd72owEB9H//xAAmEQEAAQMDAwQDAQAAAAAAAAABEQAhUTFBYRBxsYGRoeEw0fDx/9oACAECAQE/EKUTqsUiQHL6qD3sulSOzaerUMvF6DwsSCC2VcUPLXBIdo15MnvRME7LEZlk20SgAnYxvhw42aTWJLFrdEQFxd8UHeCDkGxxo65pQTEkWc+nfxTCazEZje+t+aGUgSkCaTHifuh2tDs/nppebntRkyEfUlZ+Y/VSQNN530vaahc4je9t9Jv/AFqSEIuTvFDZdIXE36JrG+s0EkRJM2qCxSg45h806SVoacH5+qi2AY5s9UVYRbj/ACgEc4R90EIXd1j3opOA2tenDSv4f//EACQQAQEBAAICAgICAwEAAAAAAAERIQAxQVEQcWGBIJEwQLGh/9oACAEBAAE/EP4AVBFMfxxeALQxQ+gHl6JBJRpuqGMDGM5b/gXxsSLUOkYfXKirlHyhb9aflKIvqLppEDlAKj1OQ1SyvgEJUKPIvLM2VNPTUXeleo7yCj8VwSjBVui7/Po+pW9k0BVCq+gBpuTsgJgkPwAei8QEoEY9PFbrZTFwXQUy7Bo0JEFLGWonwAZ7KIqwD2cJ1IM1YAPAUQi7cdDGSuBCaCUWs1nA8zIRSadPKJzHru00J4NkKC1q/LM7hJoCIJES8b2LuLwOCmnQviuDGBlAzpUYQZIK8BZ0ttSVqkJHEyv6ASB5FC0vuDjH59ybwAXsiyCEqsV5kLhxg7onBNw4narNpSBF0BI+/EGqECCQwQ4gPajhAJEeE7QCqrFdllUunwKFaJTs4kAGkpKPmr/4Ccl7ouAGDZXQaC8JpLj5OqUPayCwzV3/ANi0wjWy8OcB+k4Q2QyyE1ojfPtExsZhRVNVgXXt8IqilAXeATtpNUC0TfPUo5HRqaYIUJRVAnMGXUgME9QH4ThYQBgMP5Aueztzkd+W+wVnHdOiSorRkEDrDgRcf54YFChMCo8MMrDn4n4RNZA96rh0PJCEWSlTgBirhCsGHWN3lwudDDQ7Cz0FBBKAOx2rFI1BQD2s0wG9CUGguJRDWAoMvIWGtys4M+GjtDwwQMiGGuyLdFIPglnCOYZ56ISgMtH7f0ynhOkmIj4eONHRwloisR11yShdLgYvt3CC0BU5UUXdPbhTSIPA4uvfG/cFCo0E4qlSwOVbbOYpTnGJVlzYl6VanQvHkr+eiBksQK2q8bFgUNEKCwIQCQYhQz7wDP8ArhQ7RCBHiQKzC6pPmVrXBxR9t/sjtcZQQuloIMM6qKxxMJSUkJop0leVgxXx9Gp205GqThWYyOyHLZJJUavK5ttpnLRMiQcE9wYW1IEJQYNgrxAKP+BD+g+AjiS0Q1HyNx9JyuKujID8r9iJifGosEqifTx8DWgpA1ZrHVi8nnZ8mjuCwPY1A4orJR9JNyu2RXOBqhT2ZKQA0Oo4DA5ZmlvXCAFpEacIvO74+1fa8JsaAQD4N59jqkY8A09odWDDBWmMJCxqFdPZxTmD5OKwCYZSaevk7xOGJ52qX+95NZIz+0heA9AJAU0mn85aQ2OiSXOS4+nITsRQ1bL5WqnPYsFfFjrwOo1BkMDftFh9qqqjZopEvvk9P4Og/iuJNDSsiKNZFqBeOSzNkW+wUMREu8frY6+dbv1ng2Eb99Ef68sCbz+jD/pw5501h62z+OdWfoFsXyaNjcZEzqG4wkjd7YH4ONwZT8UkKwIAABP5EEjobQWyqJfJx/2S3uv0gX7PFT0qBDUTGxehqXjHZS+mYCpFZ0JiHl+nq1k7F4oEZow4xc19SLRekgabf9L/2Q=="/></span>
+        <span class="idtag">PRJ_01</span>
+      </div>
+      <div class="cbody">
+        <p class="kick">Open-source bioelectronics</p>
+        <h3>OpenBCI</h3>
+        <p class="where">// HARDWARE ENGINEER · 2014–2019</p>
+        <p class="desc">I was an open-source hardware engineer developing multimodal neuroscience tools. I designed soft dry electrodes for active EEG, hardware and firmware for transcranial electrical stimulation, and systems for high-speed wireless data transfer. I also contributed to sensor-geometry-aware neural decoding algorithms and task-based electrode-selection interfaces. My work spanned multiple generations of the Ultracortex and its constituent electronics boards.</p>
+        <a class="visit" href="https://openbci.com" target="_blank" rel="noopener">ACCESS ▸</a>
+      </div>
+    </article>
+
+    <!-- ===== Open Bionics ===== -->
+    <article class="card">
+      <span class="bracket tl"></span><span class="bracket br"></span>
+      <div class="frame has-video">
+        <a class="playlink" data-vid="HUW_m7oYVP4" href="https://www.youtube.com/watch?v=HUW_m7oYVP4" target="_blank" rel="noopener" aria-label="Play Open Bionics — Hero Arm on YouTube">
+          <img class="thumb" src="https://img.youtube.com/vi/HUW_m7oYVP4/hqdefault.jpg" alt="Open Bionics — Hero Arm" loading="lazy"/>
+          <span class="playbtn"></span>
+        </a>
+        <span class="logo"><img alt="Open Bionics" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wgARCABkAGQDASIAAhEBAxEB/8QAHAABAAEFAQEAAAAAAAAAAAAAAAEEBQYHCAID/8QAGwEAAgMBAQEAAAAAAAAAAAAAAgQDBQYHAQD/2gAMAwEAAhADEAAAAbKOlcXE/fCCYA30EjwG8BMySjgxuta017nO4GX3GocM6RfTceRv/QWvqfJFjIBM+yEOferlQ9EI3+hbzuHG0rjJsz5F6VrLbJdH7wxVNvmQdKrAKf0EMFUdd8fdb5nXVQy2j0n86y37Gp3pY75rzM2fPo6okQ9n9wJYVsDX6Oz6hsvPFyprn5dDWXIkWch5kqcUt5UGiMCm9BLFCDdVNMJ2rpA20BtATBD2X2E8ZAN0DbQE2BsIPWA9P//EACYQAAAGAQIGAwEAAAAAAAAAAAECAwQFBgAQIAcREhUWMCEzQFD/2gAIAQEAAQUC/dG1p9Jgjw/+FeHxeUjU38eHorVTKmTZY6qnIEMUSG2gPIe6Pc7q9xnapJmaCs6EzreYkEF9qQdSvh0Vnh0VknRExTEFWTivy3eI7LQ3BzBbW/3631iVNegOBK9ydN0Q20pugzVwV220v7oojQURNI5d3wN4ndXLQaIBGxRq5JO4smabx2rIOqtEjFRq66bVGelzTL/0NI10/NX6iWPNI2VhGhOWJxNH9KTlVHFHa6wfwP/EACMRAAIBAwQCAwEAAAAAAAAAAAACAQMEEgUQESIhMRMycaH/2gAIAQMBAT8B2RBEEQRDHaysql2+KFHR7anHbtI+mW8/WOCpatQbiRVMRELKzq3ET8c8cEWN3S7Q39LS5mr0f2VkzSYFUxEQ0jxnH5tjxdcwN4iRVMREKMtSbJSLqo3iIKNPDu4zZ+hVMREFURRVFUiDgQUUUgjb/8QAKxEAAQIEBAUDBQAAAAAAAAAAAQIEAAMFERASISMUICIxURMy8DBhcZGx/9oACAECAQE/AcQMBi4cIbIzLiZVXCz0aRKqzlB6jeGbuW7RmR38cjp1JbW9UXvAfsZ3QtP7EVGnhvuyvaYp88yHKT50xAitpO2fzgm5pO5810hpLM1whA88k2QhwjJMGkCjNpZzrVpD91xVmrQXH2+dopdN4Xcm+7+YjCwPeAkDt9P/xAA6EAABAgIEBw0JAQAAAAAAAAABAgMABBESITEQEyAiI0GBMDIzNEJRU2FykZPB4RQkQENQUmJxsaH/2gAIAQEABj8C+OCm2qjR+Y5YI0s5bzIRGjnCD+SIKqgfbHKat/zcUzU6is4bUtK5P7yVPyqQ3NXkC5frBSoUEWEHKpFhjjb/AIhjjb/iGB7wXk/a7nRizoZnozr/AFhROtihLuavtZSAbiY4A+IqOAPiGCqRcKV9G4bDtjlNPNq2gwh08KnNcHXgmhrSmuNmU32hkMTSRQXM1Wy6JlnUpFbuPrgnSehV/MoKGq2G3kWpWmsMMrLjfClZ8vOJh3UlqjvPpgxFOe+qjYL8vEPguSxuovRFYTjQ7Zq/2DiFe1O6gi7vhbzprOLMDGCh93PX1dULddUENpFJJhT1zYzUJ5huNEuwtzrAs74TMTZDj4tSkb1EGu8HHOjbtMUK0bA3rQ89y0bq2+yqiKHHnFj8lE/Qf//EACgQAAECAwcFAQEBAAAAAAAAAAEAETFBYSAhUYGRobEQMHHB8NFAUP/aAAgBAQABPyH+6R0hXvEzkEFp0R1J9IkqMfGxUXtjAeYlDsD3XRrgxCZpLiFgawSL8atUQAcwMQbRBEIC4Ikvr/aY+/dFAAI3I5x3TEBoOSOKyn46uNQyNBzHFod/gQdV9Z7X1vtA2cOHFASZumKcnBITKFxMM849DiDurBz8Pa+ZjYEcALcyx2nCcDd21Y6AwYzqQtHiwgCPuzZnU4wLTwBuQ0COmoG5dGWuBucXAztvg882m2IohANwdaMQdCzgpr+EXO/FtgEN3AxPBkG5KlhRMAiGe/L5cx7I296J5gCn9PImNTwgEFTdeQzURHcm7yUz2tzC4KmiuU/wf//aAAwDAQACAAMAAAAQ+7E6d/8A+whPVJ8xEM8aYg+mPOqwDnbpZ+HvP54gXuz/AOIN717/AP/EACURAQACAQMDAwUAAAAAAAAAAAEAETEQIVFBYaEgMLGBkcHh8P/aAAgBAwEBPxCBcs3fQASFyg2MrgP7B1hILyKn2CvNwHcfZfhuZBnR50ybN2PJ7F2pm+B4hO6ThX5q4U4fn9w3Mm59NM0hD1W3zpTuP43jtaZoCC0wOhfabtN2WKw9IOjERz7Z2//EACURAQACAQIFBQEBAAAAAAAAAAEAESExURBBYYGhcZHB4fCx0f/aAAgBAgEBPxDgHACCVwv16HNf2rM4B6A+W/FQEgdkDyV8zQQNVqfWzAlQIyVyVQOlbpvHsAdivC16wsz8rWnlnZ/awhuEL0ceNe0CVwNI4w/nCzdjV9Poqc4Uew2+xAlQI8uL9Z1lrdeSgd3HxKqo1dMNaB0b6djKlzMqtn+vN7ECVBAiWhZCaFECBKhCEIQ4f//EACQQAQABAgYCAwEBAAAAAAAAAAERADEQICFBUWGBkTBxobHw/9oACAEBAAE/EMgUs4LgtWzBSzguC1bMFLNHk1iAuRCPaHdShTvoH6fSkIzYKeRj01FeCms8oB7QQ5pLG+ScArVaK2JPLwddvLTdrQAAABoBkCraEb9Esm250ukfz9IEwiNkdsGpoKWaP+JOFFkdmmqgoQk3KzUO0UHiWnwKCs4DAa6LsrU7CcQ9w4wBJ8Mz227TV8FnA+4PTEiBwcriR9lNYsgH1wL8H1ekY9gf/iJU8PWEANBsBBxKbYAUA3CJp4DzV8i1/t8ckeo/RGScqk+jTXXXUb+H6wSAFqeQP1Mi4RMa8cjJQ/VoMwAYeyz2YxUVp1ie6PSj8njQbHr1YEhBguoh9STLVq1TqFmChlFYR1ZGspuK5oTFPpkU+UomcRjiOpP1etA8waGwtgIA6qHrKi6Q/wClBySm4B/XYDVdCgqJl9QWF7FX3FgyLVsjTFRJ8xHkSo20fZAW3zbZLCF4lgTPEH2iht7QsttJ6gNg1nJbI0Oh3H9IUwQLiHwn4mr/ABtPxf/Z"/></span>
+        <span class="idtag">PRJ_02</span>
+      </div>
+      <div class="cbody">
+        <p class="kick">Biomimetic prosthetics</p>
+        <h3>Open Bionics</h3>
+        <p class="where">// HARDWARE ENGINEER · 2014–2019</p>
+        <p class="desc">I was an open-source hardware engineer designing 3D-printed bionic arms. I implemented metamaterial joints and infill patterns to reduce motor weight and torque, full wrist and thumb actuation via custom harmonic gearing, interpolated haptic proprioception and force feedback, and improved adaptive grasping via biomimetic tendon-routing structures. My work spanned multiple prototypes and generations of the Ada Arm and its electronics.</p>
+        <a class="visit" href="https://openbionics.com" target="_blank" rel="noopener">ACCESS ▸</a>
+      </div>
+    </article>
+
+    <!-- ===== BrainGate ===== -->
+    <article class="card">
+      <span class="bracket tl"></span><span class="bracket br"></span>
+      <div class="frame has-video">
+        <a class="playlink" data-vid="thPhBDVSxz0" href="https://www.youtube.com/watch?v=thPhBDVSxz0" target="_blank" rel="noopener" aria-label="Play BrainGate on YouTube">
+          <img class="thumb" src="https://img.youtube.com/vi/thPhBDVSxz0/hqdefault.jpg" alt="BrainGate" loading="lazy"/>
+          <span class="playbtn"></span>
+        </a>
+        <span class="logo wide"><svg class="bg-mark" width="158" height="42" viewBox="0 0 620 150" xmlns="http://www.w3.org/2000/svg" aria-label="BrainGate — Turning Thought Into Action">
+          <rect x="0" y="0" width="620" height="150" rx="6" fill="#ffffff"/>
+          <g stroke="#d7dde2" stroke-width="2" opacity=".7">
+            <line x1="300" y1="18" x2="300" y2="120"/><line x1="332" y1="14" x2="332" y2="124"/><line x1="356" y1="24" x2="356" y2="116"/><line x1="378" y1="12" x2="378" y2="128"/>
+          </g>
+          <text x="14" y="98" font-family="'Rajdhani',sans-serif" font-weight="500" font-size="94" letter-spacing="4" fill="#111820">BRAIN</text>
+          <g stroke-width="6" stroke-linecap="round">
+            <line x1="306" y1="30" x2="306" y2="112" stroke="#3aa0d8"/>
+            <line x1="320" y1="22" x2="320" y2="120" stroke="#6cc5e6"/>
+            <line x1="334" y1="34" x2="334" y2="108" stroke="#4fb6c9"/>
+            <line x1="348" y1="26" x2="348" y2="116" stroke="#7ac77a"/>
+            <line x1="362" y1="38" x2="362" y2="104" stroke="#57bf86"/>
+          </g>
+          <text x="384" y="98" font-family="'Rajdhani',sans-serif" font-weight="500" font-size="94" letter-spacing="4" fill="#c2c7cc">GATE</text>
+          <text x="386" y="132" font-family="'Rajdhani',sans-serif" font-weight="600" font-size="21" letter-spacing="4" fill="#b4bac0">TURNING THOUGHT INTO ACTION</text>
+        </svg></span>
+        <span class="idtag">PRJ_03</span>
+      </div>
+      <div class="cbody">
+        <p class="kick">Implantable BCI · Brown</p>
+        <h3>BrainGate</h3>
+        <p class="where">// NEUROENGINEER · BRAINGATE TEAM · 2015–2021</p>
+        <p class="desc">A neuroengineer prototyping neural dust for brain-to-brain communication: FPGA-accelerated decoders for networks of wireless electrodes, neuromorphic RF communication algorithms, and microscale neural recording hardware. As a computational-neuroscience researcher I studied personalized noninvasive neurostimulation — biophysics simulations of pulsed ultrasound and magnetic stimulation of epileptiform cortex for precision seizure suppression — and contributed to models of sensorimotor and auditory decoding and speech generation. My work propagates through some of the BrainGate clinical trials.</p>
+        <a class="visit" href="https://www.braingate.org" target="_blank" rel="noopener">ACCESS ▸</a>
+      </div>
+    </article>
+
+    <!-- ===== Synchron ===== -->
+    <article class="card">
+      <span class="bracket tl"></span><span class="bracket br"></span>
+      <div class="frame has-video">
+        <a class="playlink" data-vid="uJhcQ0rK-Mw" href="https://www.youtube.com/watch?v=uJhcQ0rK-Mw" target="_blank" rel="noopener" aria-label="Play Synchron on YouTube">
+          <img class="thumb" src="https://img.youtube.com/vi/uJhcQ0rK-Mw/hqdefault.jpg" alt="Synchron" loading="lazy"/>
+          <span class="playbtn"></span>
+        </a>
+        <span class="logo"><img alt="Synchron" src="data:image/jpeg;base64,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U0zrHDODmcOBTRO/2Of5ZNHmr0UrJBxY61WT08Uv92Ao3YHU7uMTk6emd7XAM9gy2/jZr0cjozxabFk1rnjhLlINrqZr2/PDiPJMqKd+EieMRTKiFt2GptN0bnb9oqmnQbNk8lSnfhvI7G2WKhnkjcLQ5rMRWrqjoWrqjoWrqjoQYKKSP6pckBMpWm+7Se/iVSUbTjZbI7y2Ps7GO6CzhZws4VrntA8SnNgkbV1O5rDiH8lSVE7r8shtJ2PSPNabua03c1pu5rG4n8/bv//EACgQAQACAAUDBAEFAAAAAAAAAAEAESExQEHxcYGhUWFwwdEgkbHh8P/aAAgBAQABPyH5ReC/A2DdXYle9YoPSsWFA/UX7nNJzSc0ns/stt46MMa03BqDu2/tGCvR1NM1diMna68j9DRo0fR5AXTRiQViS7Ty2zUP3HN7dtfXaX+UXuj06y7H/cuLMC2FOmyKO7IEtDWDmH2/OX5PYDxFA2BfgN2eGyZ5PmgPfd20xoVyWvEpgvtB84xDdcUo7s4Py2H+GHiMmQWzrd6i8N8gLiFGDC6OtsCYh6k53OdzncAiriXkTGcqIz8/xLDoDNlw+2jDZ1qc9OenPRYBZoBK/Dq+aDff8G9NGFQZ6CnIZyGchgtBe/x2/9oADAMBAAIAAwAAABBtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt7f/5ttttttttsuJLttttttttt8Nttttttttttuiptttttttttt8kBttttttttttvQzttttttttttttJtttttttttyQattttttttt/bGNtttttttttJLNtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt//8QAHhEAAgIDAQADAAAAAAAAAAAAAAERMSFAYUEgUXD/2gAIAQMBAT8Q/UWOCn2ORyORyEQ6aPsLWWc/gqxpenVsuF+iJKssFrvaRbYYmnQ7CGvIMqsrWTao9Qf4ELKFTKnsXlemmqUjmczmeIKBmWmo+EoR4yxjS/1L/8QAHhEAAwADAAIDAAAAAAAAAAAAAAERITFAEHAgQVH/2gAIAQIBAT8Q9opUSfZBEREQmeNcDcKKKK5NDbofA1SPnTgkfiEDjnoX6FkSdGppxxkZGRiZiUXI0+LRe0//xAAmEAEAAgADCAMBAQAAAAAAAAABABEhMVFAQWFxgZHB8HCh8bEQ/9oACAEBAAE/EPlGiwQMBcmDFWOkoUz0FOYpyhkA3td209e8z17zPXvMyFoJL1+Zo2NQwtMkDSlNeSHB4+3kBstpzAjfSt5BxQvt/ogQ0OC6wXiHN2BuBgBgGxhACwNVVe6xC7eXLELufW0F8tE4kHNMXmjH8I223aWocTFm3nAO7Fugb8SutRXheXB0dm1NWxme8D3HEhZACr9CroYLyTI3VMfoym47pZEy1KJjr9RUWwdqM7wsJvezZlpNYy6ogTnXaHCy9jDAsHD62J0JKRMMrgg5I2I5MBMBFNFBuAKartDgWC2QqJ1B6wQDUTMGz+GxhDM4HkhmT1nxPWfE9Z8QeCAgWq4nkCw3I0QK1g3AAOAQyz5rys8aHyTYxQCYabM5+fn5+fn4RVrHBxVljYOJsPADQVeGcacVOBe4DcCgNwbGPN8AIPueoeZ6h5nqHmcKEMn9gV8df//Z"/></span>
+        <span class="idtag">PRJ_04</span>
+      </div>
+      <div class="cbody">
+        <p class="kick">Endovascular neuroelectronics</p>
+        <h3>Synchron</h3>
+        <p class="where">// SR. NEUROELECTRONICS ENGINEER · 2022–2023</p>
+        <p class="desc">I was an electrical and embedded systems engineer designing endovascular neural interfaces for patients with ALS. I developed Class III implant firmware including secure data transfer and embedded data logging, plus hardware for cloud-based nonstationarity compensation and real-time motor decoding. I also built models of signal propagation through custom electrode interfaces to drive material selection and fabrication. My work is represented in the clinical COMMAND trial.</p>
+        <a class="visit" href="https://synchron.com" target="_blank" rel="noopener">ACCESS ▸</a>
+      </div>
+    </article>
+
+    <!-- ===== Butterfly Network ===== -->
+    <article class="card">
+      <span class="bracket tl"></span><span class="bracket br"></span>
+      <div class="frame has-video">
+        <a class="playlink" data-vid="181PAbDjpOw" href="https://www.youtube.com/watch?v=181PAbDjpOw" target="_blank" rel="noopener" aria-label="Play Butterfly Network on YouTube">
+          <img class="thumb" src="https://img.youtube.com/vi/181PAbDjpOw/hqdefault.jpg" alt="Butterfly Network" loading="lazy"/>
+          <span class="playbtn"></span>
+        </a>
+        <span class="logo"><img alt="Butterfly Network" src="data:image/jpeg;base64,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"/></span>
+        <span class="idtag">PRJ_05</span>
+      </div>
+      <div class="cbody">
+        <p class="kick">Ultrasound-on-chip · 4Catalyzer</p>
+        <h3>Butterfly Network</h3>
+        <p class="where">// EMBEDDED ML ENGINEER · 4CATALYZER · 2019–2022</p>
+        <p class="desc">A researcher at a medtech consortium developing novel algorithms, devices, and models for miniaturized brain and biomedical imaging. At 454 Bio, I built physics-informed data-augmentation models for in-vivo protein quantification, low-field MRI, and ultrasonic intracranial-pressure monitoring, plus sensor-fusion for multimodal seizure detection. At Tesseract Health &amp; Quantum-Si, I engineered hardware-accelerated imaging pipelines and classifiers for automated detection of diabetic retinopathy, glaucoma, and Alzheimer's. At Hyperfine &amp; Liminal Sciences, I developed a transcranial-Doppler suite for point-of-care MRI — MEMS ultrasound driver boards and beamsteering for vessel localization. At Butterfly Network, I designed wearable whole-brain ultrasonic neuromodulation: CUDA beamforming kernels, driver boards, and Jetson firmware. My work is distributed throughout the Butterfly Garden.</p>
+        <a class="visit" href="https://www.butterflynetwork.com" target="_blank" rel="noopener">ACCESS ▸</a>
+      </div>
+    </article>
+
+    <!-- ===== Neurosoft ===== -->
+    <article class="card">
+      <span class="bracket tl"></span><span class="bracket br"></span>
+      <div class="frame">
+        <svg class="render" viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" aria-label="Conformable implant render">
+          <g stroke-width="18" opacity=".1"><line x1="0" y1="196" x2="400" y2="196" stroke="#ff2e97"/></g>
+          <path d="M90 90 q60 -30 120 0 q60 30 110 0 l0 70 q-55 30 -110 0 q-60 -30 -120 0 z" fill="none" stroke="#7b5cff" stroke-width="2.6"/>
+          <g fill="#00e6ff">
+            <circle cx="128" cy="108" r="2.6"/><circle cx="158" cy="102" r="2.6"/><circle cx="188" cy="104" r="2.6"/><circle cx="218" cy="108" r="2.6"/><circle cx="248" cy="104" r="2.6"/><circle cx="278" cy="106" r="2.6"/>
+            <circle cx="128" cy="134" r="2.6"/><circle cx="158" cy="130" r="2.6"/><circle cx="188" cy="132" r="2.6"/><circle cx="218" cy="136" r="2.6"/><circle cx="248" cy="132" r="2.6"/><circle cx="278" cy="132" r="2.6"/>
+          </g>
+          <path d="M108 120 q50 -14 100 0 q52 14 104 0" fill="none" stroke="#00e6ff" stroke-width="1.8" opacity=".7"/>
+          <rect x="196" y="150" width="34" height="26" rx="5" fill="none" stroke="#f9f002" stroke-width="2.4"/>
+          <g fill="none" stroke="#ff2e97" stroke-width="2.6"><path d="M250 150 q18 -6 18 -26 M262 158 q30 -10 30 -44"/></g>
+        </svg>
+        <span class="logo"><img alt="Neurosoft Bioelectronics" src="data:image/jpeg;base64,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AAwDAQACAAMAAAAQ888888888888888884E4w888888888wo8Qc88888888k84A088888888Q4IAc88888888sY808888888888c8U8888888888sw88888844480008w4888op0Aww4ccogV88sEwYc4skw008s88cM88Mccs888888888888888//EABQRAQAAAAAAAAAAAAAAAAAAAHD/2gAIAQMBAT8QKf/EABQRAQAAAAAAAAAAAAAAAAAAAHD/2gAIAQIBAT8QKf/EACkQAQEAAgEDAwUAAgMBAAAAAAERACExQVFhccHwEECBkaEgULHh8dH/2gAIAQEAAT8Q+Ve+fKvfPlXvnyr3z5V758q98+Ve+fKvfPlXvnyr3z5V758q98+Ve+fKvfPlXvnyr3z5V758q98+Ve+fKvfPlXvnyr3z5V758q98+Ve/+kowxEewlX0MOaAkuf8ASwZ+vete3X/MJZCrM/6WRzw9YREIR9T7QC9awcrYEtywIrsGwJEBNJmPtI66fEKVCQPYAnY67Z4c/GT+4VQBQF0g07lvbK1sQJ0BI3bE1vMRU6VIh0nMliCpjPsQ8lPr8MhqdUDlypuTAhHnA0dKYgCoCHdiz0EGkTk8MyFdHAR3p6GfhDRt36n8XCqLWR08xHFh4TAnJCPZFKXoA6NIzZW0+6j3Fi9COGQj1RQr8I8OlnJ9j4vCVovcF9eOMTyp1A5YnhWnD6A0VpTvLqS07XE8A1R5tISI35BAcD/aiP5fGGXxxoq4RlAk2E1cGmHwsXXYXQgB0OD7AEgHQcNTynRhz/MBfJ7D/sReLpurq/AfrFQ8MRRDuSfznql6URORPWOxiqqtXq/RARRNidM8CjgpU6/+0Z1nc8ip4lrxjeXO9wxdtL9/Yx/CLk8XhD+8badtwB6QBPXlOWRh/GCBuC6ZaTqZ6g8J9KG+XHgHq5Uh3aB/QdC7jdcTmPPVZnhCwoTZjkC+gF+T7FY5UtDDvVsdwY64LNV0nUQJzJwwUg0DYkGgXCFcGS78AAAUh9grUIZCgV33Vdt50/bDBoSkEVKfca2hXE1/PaEVsdJBZhvoqxXt8g16pjhDqOBPNW07IfYswXwsEDhEEfGWCsYRTgEH6W9VipkDIkTEld1DY0i//KA28pxU/Lznll4Lv1fy5L3eaS/t4oXhzjIoZwgJiUNVLKwAxUjhJ0dH7SKGtrCYoVDyqqvn7KSDYAf4jsR0iiI4OJ7oUI9CxXk6okSEUTqZ1yTlO639OMVSqq9XCEhlXgh1JFOAdKiuroS/8BwBoAAA+0C/cmmJAU5vNiCbwQgFyCh14icCIiDrP7eDCVnqlX0NC9VAFQboUzbG4Joo2DIK/aiPBq5IWKlJFCc5LKs9MA0g0dJOaH9vAW643Qr6EBLyg5Qere++qbRBmgqwF+1CFFHSdmYta85/b+hw0uzh2Lx9shWVcdbboBXgcNxzdDfHpP8A4GUy7SstN1CDwn25rmC2I29EQei3E5t6dl8jpidJyqQU9Yl6z/TbQU9Ilbrqh6F02tZxDAYabSfnD49A5vwDjJdYKRKkyCbNYpFUuy5TSk6/XDU8wEVWzvW8OV6lqsNNpPznrmjGo9B+GcWYU4QRKIl5EwiZmLZKzAUEoxKgs2uQwMqaEXYBK1BLsVyXTnX3ydMRoxqkLaugUKgFHSDqM4LAJMXI23SaXJsrOjdJfGGsdnIYzjQKMeND9om8IbPTo2SmXaYEuSi8USebp3sGiPd0ffh2o+mau4tSsERicmDjdy7OZCFabx9qiIUFKQqF8mT1ox27MGkSX6h8ssj3PVNrQW1gr4V1W7PdDy5jfpWAf8zC0XhfV1xj0AdLd2Nnb1Z8V2/Qv8LzzXPkEV1Bqk3wmSfBmLkEfp4BtjeoKzoQhSDaeAwRVbzc3SblI8KYRtR3XAq2nis3yccxDcTFmQjxdUqR7pFnODH9IIFUcfE4NJhsUcYFNwaLOUuVyFTZBEpnQTnsOuOCPIuyUmWHOEsJApp9GBzwREqdSxx2/wAj6VW7LTrSJytPqI7+ms4pJ1QgJRm8hef5fqH02XtrF6aK1JwR1kbH3zZ9ggI4TNa7aybFIZUktDoatxqTyQfLw2QzUPJg48PYhAcLt7KWXiGVtwoilgBth4KEXLwXbntG+j+sdcVhT/i7q5p2BagNKqvqVINDs7wlSiqiCEaVIh2lUrWhEu0i1ouq14UnvElqwpKykjZlMHMQCPetkpIqRAypDNUunW4ODo0OgDDGhGh7hzKZwf4n0vPL5YwZTaFnYwuHREuQ4x6lwSmOxfL23xrj6IA8mE0ECkAIsu3vgvcQpdxZTw6zdvxVVOFVHymBCME0lGCijHYpnDp4VFGqABXQBjpiTRlYa1VSRrhdIPzuENj5MaD8JpJ/9GK7oxe5VbXy5/ADCy4n7yxC2Xbag8N+idMpee8bPMziayB6CT8Jgs+QKXNYx6lzRrt0UqlUAq9PovEigiKwLQM40YxZA7FXKjtVr9XXBokA84H1JBaG+cdCKI6b5kdYq2JgeA6oKh1ZiJWOdBGYIEE6hm6RvNloRKko3I4J1nw5rUatQLyOmBY1mwY1Ju/REhRVIdRBIIU44YkNgKCm6eeasw9ISGDxNGpeugUXLWQS+oTpw7jl2nkKQoGtyOTbknfWbZNZO7ElKDFVKaN2heogm5YPQBcoS1kB5f5Ch4ALwwqmFmCYOPqhm0QgSHOboFmsQK7dBnHA5IUdpXa8uFMFHIvCDViWsDC2zzBWUACCgWWGTd2AVBoNUFdyl+pQ/HKbr/1KISEtwtz8DYzTyKnkM4dMEOF5EHAaFVdGBRKgqWCW3F/NMNxYZjleT/baECo3nWIaaY3oB5H4wAEAcg21VrvKNI3hLaBXhhjiSuFKlHSdx0lHWH6LJSpSi4VWFF9G6T1bQIVXpgYh2jAIOpBHm4X1SBUFzw1oUEAMQz0/pRBtpE40gRNUDCAG0IBoAOMZMAcx0GwsZJpIg5zDzPGQXpvCn/r2Bpa9MWelSxQBtxE4qAH5/wDVViAFgHBkSe4em0E2UJCyr/s//9k="/></span>
+        <span class="idtag">PRJ_06</span>
+      </div>
+      <div class="cbody">
+        <p class="kick">Conformable µECoG</p>
+        <h3>Neurosoft Bioelectronics</h3>
+        <p class="where">// SR. EMBEDDED SYSTEMS ENGINEER · 2025–PRESENT</p>
+        <p class="desc">I'm an embedded systems and electrical engineer working on neural recording and communications systems in extremely flexible micro-ECoG arrays for high-density, deep sulcal access and full cortical coverage. I work on integrating Neurosoft's electrode materials with the Science recording ecosystem, full-scale AI-driven decoding pipelines, and firmware development across the stack.</p>
+        <a class="visit" href="https://www.neurosoftbio.com" target="_blank" rel="noopener">ACCESS ▸</a>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="terminal">
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span> &nbsp; florence@neuro:~$ contact</div>
+      <div class="body">
+        <p class="line"><span class="c">&gt;</span> initiating handshake...</p>
+        <h4>LET’S CHAT_<span class="cursor"></span></h4>
+        <p class="line">An avid 3D-printing fan, and a rabid TTRPG one.</p>
+        <div class="foot-links">
+          <a href="mailto:bebtechsolutions@gmail.com">✉ bebtechsolutions@gmail.com</a>
+          <a class="m" href="https://www.linkedin.com/in/florence-lee-beb" target="_blank" rel="noopener">⌁ LINKEDIN</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+  <script>
+    // Click-to-play: neon thumbnail loads the real YouTube player inline on click.
+    // Works on any https host (e.g. GitHub Pages). Falls back to opening YouTube if JS is off.
+    document.querySelectorAll('.playlink').forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        var vid = a.getAttribute('data-vid');
+        var frame = a.closest('.frame');
+        var fr = document.createElement('iframe');
+        fr.className = 'yt';
+        fr.src = 'https://www.youtube-nocookie.com/embed/' + vid + '?autoplay=1&rel=0';
+        fr.title = a.getAttribute('aria-label') || 'YouTube video';
+        fr.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        fr.referrerPolicy = 'strict-origin-when-cross-origin';
+        fr.setAttribute('allowfullscreen', '');
+        a.remove();
+        frame.appendChild(fr);
+      });
+    });
+  </script>
+</body>
+</html>
