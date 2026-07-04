@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BCI Beb — neural interfaces · assistive design · cognitive augmentation</title>
+<title>BCI Beb — neural interfaces · cybernetics design · cognitive augmentation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Nunito:wght@400;500;600;700&family=Rajdhani:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
@@ -168,6 +168,45 @@
   .foot-links a.m:hover{background:var(--rose); color:#20182a}
 
   @media (max-width:760px){.grid{grid-template-columns:1fr} .blurb{padding:24px 20px}}
+  /* ---- publications + research log (shared, both themes) ---- */
+  .pubs{margin-top:22px; display:flex; flex-direction:column; gap:12px}
+  .pub{display:grid; grid-template-columns:84px 1fr; gap:14px; align-items:start;
+    background:rgba(20,24,42,.42); border:1px solid var(--line); border-left:3px solid var(--cyan);
+    border-radius:10px; padding:14px 16px}
+  .pub .when{font-family:'Share Tech Mono',monospace; font-size:.74rem; color:var(--cyan); letter-spacing:.05em; padding-top:2px}
+  .pub .t{margin:0 0 4px; font-size:1.02rem; color:var(--ink); font-weight:700; line-height:1.32}
+  .pub .cite{margin:0; font-family:'Share Tech Mono',monospace; font-size:.76rem; color:var(--dim)}
+  .pub .cite b{color:var(--cyan); font-weight:700}
+  .logs{margin-top:22px; display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  .log{background:rgba(20,24,42,.42); border:1px solid var(--line); border-radius:10px; padding:15px 16px}
+  .log .yr{display:block; font-family:'Share Tech Mono',monospace; font-size:.7rem; letter-spacing:.08em; color:var(--cyan); margin-bottom:5px}
+  .log h4{margin:0 0 2px; font-size:1.04rem; color:var(--ink); font-weight:700; line-height:1.25}
+  .log .role{margin:0 0 7px; font-family:'Share Tech Mono',monospace; font-size:.7rem; color:var(--dim)}
+  .log p{margin:0; font-size:.9rem; color:var(--ink); opacity:.82; line-height:1.5}
+  @media (max-width:760px){.logs{grid-template-columns:1fr} .pub{grid-template-columns:1fr; gap:6px}}
+  /* ---- publication figure carousels ---- */
+  .pub-grid{margin-top:22px; display:grid; grid-template-columns:repeat(2,1fr); gap:20px}
+  .paper{background:rgba(20,24,42,.42); border:1px solid var(--line); border-radius:12px; overflow:hidden; display:flex; flex-direction:column}
+  .paper .car{position:relative; background:#fff; aspect-ratio:16/10; overflow:hidden}
+  .paper .track{display:flex; height:100%; transition:transform .4s ease}
+  .paper .track img{min-width:100%; width:100%; height:100%; object-fit:contain; background:#fff}
+  .paper .cbtn{position:absolute; top:50%; transform:translateY(-50%); width:34px; height:34px; border-radius:50%;
+    border:1px solid var(--line); background:rgba(6,10,20,.74); color:var(--cyan); font-size:1.15rem; line-height:1;
+    cursor:pointer; z-index:2; display:flex; align-items:center; justify-content:center; transition:.2s}
+  .paper .cbtn.prev{left:8px} .paper .cbtn.next{right:8px}
+  .paper .cbtn:hover{background:var(--cyan); color:#05060d}
+  .paper .flabel{position:absolute; left:8px; bottom:8px; z-index:2; font-family:'Share Tech Mono',monospace;
+    font-size:.64rem; letter-spacing:.08em; color:var(--cyan); background:rgba(6,10,20,.72); border:1px solid var(--line); padding:2px 7px}
+  .paper .pmeta{padding:15px 17px 18px}
+  .paper .when{margin:0; font-family:'Share Tech Mono',monospace; font-size:.72rem; color:var(--cyan); letter-spacing:.04em}
+  .paper .when b{color:var(--cyan); font-weight:700}
+  .paper .t{margin:6px 0 5px; font-size:1.02rem; color:var(--ink); font-weight:700; line-height:1.32}
+  .paper .cite{margin:0 0 13px; font-family:'Share Tech Mono',monospace; font-size:.74rem; color:var(--dim)}
+  .paper.text-only .pmeta{padding-top:18px}
+  @media (max-width:760px){.pub-grid{grid-template-columns:1fr}}
+  .log a.ln{color:var(--cyan); text-decoration:none; border-bottom:1px solid transparent; font-weight:700}
+  .log a.ln:hover{border-color:var(--cyan)}
+  .log p + p{margin-top:8px}
 </style>
 </head>
 <body>
@@ -180,12 +219,12 @@
 
   <!-- ============ HERO ============ -->
   <header class="hero">
-    <p class="eyebrow">Neuroengineer // designer // storyteller</p>
-    <h1 class="name glitch" data-txt="BCI Beb">BCI Beb</h1>
+    <p class="eyebrow">bci beb // designer // storyteller</p>
+    <h1 class="name glitch" data-txt="import florence"><span style="color:var(--cyan)">import</span> florence</h1>
     <p class="subline">Converting between <b>science</b> and <b>story</b></p>
     <div class="roles">
       <span class="tagx">NEURAL INTERFACES</span>
-      <span class="tagx m">ASSISTIVE DESIGN</span>
+      <span class="tagx m">CYBERNETICS DESIGN</span>
       <span class="tagx y">COGNITIVE AUGMENTATION</span>
     </div>
   </header>
@@ -193,8 +232,8 @@
   <!-- ============ BLURB ============ -->
   <section class="blurb">
     <p class="hdr">&gt; <b>cat</b> ./about/florence.md</p>
-    <p class="lead">Hi, I’m Florence! As a child in a philosophy lecture, I never thought I’d end up in the lab — but my obsession with <span class="pz">p-zombies</span> led me through neurobiology and computational neuroscience, into the world of neural interfaces, assistive design, and cognitive augmentation.</p>
-    <p>I make all sorts of doodads. From cognitive-enhancement wearables, brain-to-brain communication implants, and biomimetic prosthetic limbs, to sundial sculptures, smart furniture, and artificial senses — I love bringing insights from one field into another.</p>
+    <p class="lead">Hi, I’m Florence! As a child in a philosophy lecture, I never thought I’d end up in the lab — but my obsession with <span class="pz">p-zombies</span> led me through neurobiology and computational neuroscience, into the world of neural interfaces, cybernetics design, and cognitive augmentation.</p>
+    <p>I make all sorts of doodads. From memory enhancing <em>wearables</em>, brain-to-brain communication <em>implants</em>, and biomimetic prosthetic <em>limbs</em>, to sundial <em>sculptures</em>, smart <em>furniture</em>, and artificial <em>senses</em> — I love bringing insights from one field into another.</p>
     <p>My research interests lie in <em>multiscale neural recording</em> and <em>edge ML as a compression method for wireless BCI</em>. I’ve been extremely fortunate to work alongside some of the best teams in neurotechnology and nanoscience, with contributions to multiple implant studies and novel neural-imaging modalities — from PCBs and neural decoding for BrainGate and Synchron’s clinical trials, to beamforming and spline interpolation for the Butterfly Garden.</p>
     <p>An avid 3D-printing fan, and a rabid TTRPG one. Let’s chat!</p>
   </section>
@@ -351,6 +390,86 @@
 
   </div>
 
+  <!-- ============ PUBLICATIONS ============ -->
+  <div class="sechead">
+    <h2>PUBLICATIONS<span>_</span></h2>
+    <span class="meta">// peer-reviewed · Nature family</span>
+  </div>
+    <div class="pub-grid">
+      <div class="paper">
+        <div class="car">
+          <div class="track">
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41928-024-01134-y/MediaObjects/41928_2024_1134_Fig1_HTML.png" alt="Figure 1" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41928-024-01134-y/MediaObjects/41928_2024_1134_Fig2_HTML.png" alt="Figure 2" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41928-024-01134-y/MediaObjects/41928_2024_1134_Fig3_HTML.png" alt="Figure 3" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41928-024-01134-y/MediaObjects/41928_2024_1134_Fig4_HTML.png" alt="Figure 4" onerror="this.style.display=&quot;none&quot;"/>
+          </div>
+          <button class="cbtn prev" aria-label="Previous figure">&#8249;</button>
+          <button class="cbtn next" aria-label="Next figure">&#8250;</button>
+          <span class="flabel">FIG <span class="cur">1</span>/4</span>
+        </div>
+        <div class="pmeta">
+          <p class="when">2024.03 · <b>Nature Electronics</b></p>
+          <p class="t">An asynchronous wireless network for capturing event-driven data from large populations of autonomous sensors</p>
+          <p class="cite">Lee &amp; Lee et al.</p>
+          <a class="visit" href="https://www.nature.com/articles/s41928-024-01134-y" target="_blank" rel="noopener">READ &#9656;</a>
+        </div>
+      </div>
+      <div class="paper">
+        <div class="car">
+          <div class="track">
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41928-021-00631-8/MediaObjects/41928_2021_631_Fig1_HTML.png" alt="Figure 1" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41928-021-00631-8/MediaObjects/41928_2021_631_Fig2_HTML.png" alt="Figure 2" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41928-021-00631-8/MediaObjects/41928_2021_631_Fig3_HTML.png" alt="Figure 3" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41928-021-00631-8/MediaObjects/41928_2021_631_Fig4_HTML.png" alt="Figure 4" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41928-021-00631-8/MediaObjects/41928_2021_631_Fig5_HTML.png" alt="Figure 5" onerror="this.style.display=&quot;none&quot;"/>
+          </div>
+          <button class="cbtn prev" aria-label="Previous figure">&#8249;</button>
+          <button class="cbtn next" aria-label="Next figure">&#8250;</button>
+          <span class="flabel">FIG <span class="cur">1</span>/5</span>
+        </div>
+        <div class="pmeta">
+          <p class="when">2021.08 · <b>Nature Electronics</b></p>
+          <p class="t">Neural recording and stimulation using wireless networks of micro-implants</p>
+          <p class="cite">Lee et al.</p>
+          <a class="visit" href="https://www.nature.com/articles/s41928-021-00631-8" target="_blank" rel="noopener">READ &#9656;</a>
+        </div>
+      </div>
+      <div class="paper">
+        <div class="car">
+          <div class="track">
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs42003-019-0707-9/MediaObjects/42003_2019_707_Fig1_HTML.png" alt="Figure 1" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs42003-019-0707-9/MediaObjects/42003_2019_707_Fig2_HTML.png" alt="Figure 2" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs42003-019-0707-9/MediaObjects/42003_2019_707_Fig3_HTML.png" alt="Figure 3" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs42003-019-0707-9/MediaObjects/42003_2019_707_Fig4_HTML.png" alt="Figure 4" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs42003-019-0707-9/MediaObjects/42003_2019_707_Fig5_HTML.png" alt="Figure 5" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs42003-019-0707-9/MediaObjects/42003_2019_707_Fig6_HTML.png" alt="Figure 6" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs42003-019-0707-9/MediaObjects/42003_2019_707_Fig7_HTML.png" alt="Figure 7" onerror="this.style.display=&quot;none&quot;"/>
+          <img class="fig" loading="lazy" src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs42003-019-0707-9/MediaObjects/42003_2019_707_Fig8_HTML.png" alt="Figure 8" onerror="this.style.display=&quot;none&quot;"/>
+          </div>
+          <button class="cbtn prev" aria-label="Previous figure">&#8249;</button>
+          <button class="cbtn next" aria-label="Next figure">&#8250;</button>
+          <span class="flabel">FIG <span class="cur">1</span>/8</span>
+        </div>
+        <div class="pmeta">
+          <p class="when">2019.12 · <b>Communications Biology</b></p>
+          <p class="t">Decoding speech from spike-based neural population recordings in secondary auditory cortex of non-human primates</p>
+          <p class="cite">Heelan &amp; Lee et al.</p>
+          <a class="visit" href="https://www.nature.com/articles/s42003-019-0707-9" target="_blank" rel="noopener">READ &#9656;</a>
+        </div>
+      </div>
+    </div>
+
+  <!-- ============ RESEARCH LOG ============ -->
+  <div class="sechead">
+    <h2>RESEARCH<span>_</span>LOG</h2>
+    <span class="meta">// earlier work · research + nanoscience</span>
+  </div>
+  <div class="logs">
+    <div class="log"><span class="yr">2015–2019</span><h4>Brown University</h4><p class="role">Providence, RI</p><p><a class="ln" href="https://carney.brown.edu/" target="_blank" rel="noopener">Carney Institute for Brain Science</a> — electromagnetic models of beta-wavelet attention, ultrasonic seizure suppression, and rTMS interneuron simulations.</p><p><a class="ln" href="https://hcri.brown.edu/about/" target="_blank" rel="noopener">Humanity-Centered Robotics Initiative</a> — delta 3D printers, smart furniture, and an AR force-feedback exoskeleton.</p></div>
+    <div class="log"><span class="yr">2013–2019</span><h4><a class="ln" href="https://cns1.rc.fas.harvard.edu/" target="_blank" rel="noopener">Center for Nanoscale Systems</a></h4><p class="role">Materials Engineer · Harvard University · Cambridge, MA</p><p>Nanowire hippocampal neuroprosthetics, immunosuppressant-eluting anti-scar polymers, and glucose fuel cells.</p></div>
+  </div>
+
   <!-- ============ FOOTER ============ -->
   <footer>
     <div class="terminal">
@@ -385,6 +504,19 @@
         a.remove();
         frame.appendChild(fr);
       });
+    });
+  </script>
+  <script>
+    // Publication figure carousels
+    document.querySelectorAll('.paper .car').forEach(function(car){
+      var track=car.querySelector('.track');
+      var imgs=track.querySelectorAll('img');
+      var cur=car.querySelector('.flabel .cur');
+      var i=0, n=imgs.length;
+      function go(k){ i=((k%n)+n)%n; track.style.transform='translateX(-'+(i*100)+'%)'; if(cur)cur.textContent=(i+1); }
+      var p=car.querySelector('.cbtn.prev'), nx=car.querySelector('.cbtn.next');
+      if(p)p.addEventListener('click',function(){go(i-1)});
+      if(nx)nx.addEventListener('click',function(){go(i+1)});
     });
   </script>
 </body>
