@@ -49,3 +49,28 @@ Then enable Pages as described above.
 ## Contact
 
 bebtechsolutions@gmail.com
+
+## If the GitHub Pages deploy fails
+
+The site is a plain static file, so failures are almost always a Pages *setting*,
+not the HTML. Two reliable fixes:
+
+**Option A — deploy via GitHub Actions (recommended).**
+This repo includes `.github/workflows/deploy.yml`, which uploads the files
+directly (no Jekyll). To use it:
+
+1. Push this repo (including the `.github` folder).
+2. Repo → **Settings → Pages → Build and deployment → Source: "GitHub Actions"**.
+3. The "Deploy static site to Pages" workflow runs on every push to `main`.
+   Watch it under the repo's **Actions** tab.
+
+**Option B — deploy from a branch.**
+Settings → Pages → Source: **Deploy from a branch** → **main / root**.
+The `.nojekyll` file (already included) tells Pages to skip the Jekyll build.
+
+**Common gotchas**
+- The repo must be **public** (or you need GitHub Pro for private Pages).
+- `index.html` must be at the **root** of the branch/folder you deploy — not
+  inside a subfolder.
+- If you first pushed with an auto-generated README, do a `git pull --rebase`
+  (or force-push) so histories aren't out of sync.
