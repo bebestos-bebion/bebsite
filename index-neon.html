@@ -208,6 +208,25 @@
   .car .track .vslide{min-width:100%; height:100%; position:relative; display:block}
   .card.textcard .cbody{padding-top:22px}
   .tclogo{display:block; width:46px; height:46px; object-fit:contain; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:9px; padding:6px; margin-bottom:12px}
+  /* ---- tabs (Work / Essays / Workshop) ---- */
+  .tabs{display:flex; gap:8px; margin:44px 0 0; border-bottom:1px solid var(--line); flex-wrap:wrap}
+  .tab{font-family:'Share Tech Mono',monospace; font-size:.78rem; letter-spacing:.14em; text-transform:uppercase;
+    background:none; border:1px solid var(--line); border-bottom:none; color:var(--dim);
+    padding:11px 20px; cursor:pointer; border-radius:8px 8px 0 0; transition:.2s}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--cyan); border-color:var(--cyan)}
+  .panel[hidden]{display:none}
+  .panel{animation:tabfade .3s ease}
+  @keyframes tabfade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+  .essays{display:flex; flex-direction:column; gap:18px; margin-top:24px}
+  .etags{display:flex; gap:7px; flex-wrap:wrap; margin-top:6px}
+  .etag{font-family:'Share Tech Mono',monospace; font-size:.64rem; letter-spacing:.08em; color:var(--dim);
+    border:1px solid var(--line); padding:2px 9px; border-radius:999px}
+  .shop-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-top:24px}
+  .ph{aspect-ratio:4/3; display:flex; align-items:center; justify-content:center; color:var(--dim);
+    font-family:'Share Tech Mono',monospace; font-size:.7rem; letter-spacing:.12em; border-bottom:1px solid var(--line);
+    background:repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 10px, rgba(255,255,255,.06) 10px 20px)}
+  @media (max-width:760px){.shop-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -236,12 +255,19 @@
   <!-- ============ BLURB ============ -->
   <section class="blurb">
     <p class="hdr">&gt; <b>cat</b> ./about/florence.md</p>
-    <p class="lead">Hi, I'm Florence. A childhood fascination with <span class="pz">p-zombies</span> — whether there's really <em>someone</em> home behind a pair of eyes — sent me looking for the answer in the wiring: through neurobiology and computational neuroscience, and into building the devices that let us listen to the brain and talk back. Since then my work has spanned neural interfaces, cybernetics design, and cognitive augmentation — from molecular neurobiology and nanoscale materials to open-source neurotech, wireless cortical implants, clinical brain–computer interfaces, and imaging, on into industry.</p>
+    <p class="lead">Hi, I'm Florence! A childhood fascination with <span class="pz">p-zombies</span> sent me through neurobiology and computational neuroscience, and into building the devices that let us listen to the brain and talk back. Since then my work has spanned neural interfaces, cybernetics design, and cognitive augmentation — from molecular neurobiology and nanoscale materials to open-source neurotech, wireless cortical implants and clinical brain–computer interfaces and imaging.</p>
     <p>I make all sorts of doodads. From memory enhancing <em>wearables</em>, brain-to-brain communication <em>implants</em>, and biomimetic prosthetic <em>limbs</em>, to sundial <em>sculptures</em>, smart <em>furniture</em>, and artificial <em>senses</em> — I love bringing insights from one field into another.</p>
-    <p>I've worked up and down the scale — from single calcium channels and stretchable materials, to sub-millimeter wireless implants, clinical brain–computer interfaces, and the imaging and prosthetics that put them to use. My research lives in <em>multiscale neural recording</em> and <em>edge ML as compression for wireless BCI</em> — and I care as much about <em>understanding</em> a thing as making it work.</p>
+    <p>I've worked up and down the stack — from single calcium channels and nanowires, to sub-millimeter wireless implants, clinical brain–computer interfaces, and the imaging and prosthetics that put them to use. My research lives in <em>multiscale neural recording</em> and <em>edge ML as compression for wireless BCI</em> </p>
     <p>An avid 3D-printing fan, and a rabid TTRPG one. Let’s chat!</p>
   </section>
 
+  <!-- ============ TABS ============ -->
+  <div class="tabs">
+    <button class="tab active" data-tab="work">WORK</button>
+    <button class="tab" data-tab="essays">ESSAYS</button>
+    <button class="tab" data-tab="workshop">WORKSHOP</button>
+  </div>
+  <section class="panel" id="tab-work">
   <!-- ============ TIMELINE ============ -->
   <div class="sechead">
     <h2>TIMELINE<span>_</span></h2>
@@ -256,7 +282,7 @@
         <p class="kick">Where it began · Columbia</p>
         <h3>Columbia University</h3>
         <p class="where">// NEUROBIOLOGY · NEW YORK, NY · 2012–2015</p>
-        <p class="desc">Where I fell in love with the brain. I was hopelessly star-struck getting to take classes with <b>Rafael Yuste</b> and <b>Eric Kandel</b> — the kind of minds who make the whole field feel electric.</p>
+        <p class="desc">I was very fortunate to have been able to enroll in Columbia's neurobiology and biomedical engineering programs as a young lass, by wandering into the relevant classrooms and being allowed to stay when it turned out I was well-read enough. Learned from the greats like Kandel and Yuste, and spent entirely too much time in MATLAB</p>
       </div>
     </article>
     </div>
@@ -268,7 +294,7 @@
         <p class="kick">Molecular neurobiology · Cornell</p>
         <h3>Weill Cornell Medicine</h3>
         <p class="where">// NEW YORK, NY · 2012–2015</p>
-        <p class="desc">Where it started, at the molecular scale — qPCR and Western blots tracking Cacna1c, and a VR maze for testing behavior. My first paper grew out of this bench.</p>
+        <p class="desc"> Where I learned that wet-lab bio was not for me, and where I got my first taste of engineering. I split my time between behavioral neuroscience instrumentation (procedural virtual mazes and automated experimental scoring), but more importantly, my lab manager introduced me to the world of 3D printing. My first paper grew out of this bench.</p>
         <a class="visit" href="https://pubmed.ncbi.nlm.nih.gov/27922594/" target="_blank" rel="noopener">READ PAPER &#9656;</a>
       </div>
     </article>
@@ -288,7 +314,7 @@
         <p class="kick">Biomimetic prosthetics</p>
         <h3>Open Bionics</h3>
         <p class="where">// HARDWARE ENGINEER · 2014–2019</p>
-        <p class="desc">Giving the body back. I designed 3D-printed bionic arms — metamaterial joints and infills to lighten the motors, harmonic-geared wrists and thumbs, biomimetic tendon routing for a natural grip, and interpolated haptics so you can actually feel. My work ran through prototypes and generations of the Ada Arm.</p>
+        <p class="desc"> My first time listening to the body, and appreciating its complexity. I was a hardware engineer designing advanced 3D-printable prosthetic arms that weren't a drag to use, and celebrated difference instead of being ashamed of it. My materials innovations in metamaterial infills, improved tendon routing, and grasping surface design; and my electronics and firmware work on adaptive grip, EMG decoding, and haptic feedback spanned multiple generations of the Ada devices. </p>
         <a class="visit" href="https://openbionics.com" target="_blank" rel="noopener">ACCESS ▸</a>
       </div>
     </article>
@@ -308,7 +334,7 @@
         <p class="kick">Open-source bioelectronics</p>
         <h3>OpenBCI</h3>
         <p class="where">// HARDWARE ENGINEER · 2014–2019</p>
-        <p class="desc">Putting the brain in everyone's hands. As an open-source hardware engineer I designed soft dry electrodes for active EEG, hardware and firmware for transcranial electrical stimulation, and high-speed wireless links — plus decoding that's aware of where each sensor sits. It shipped across generations of the Ultracortex headset.</p>
+        <p class="desc">OpenBCI gave me my start in neuroscience and neuroengineering by providing access to a platform that let me absorb the shape of a BCI system - a schema that has served me well for decades. From tinkering with active dry electrodes and conductive polymers, to prototyping the edge ML that would later be my thesis, my work in the OpenBCI ecosystem spanned the Ultracortex series.</p>
         <a class="visit" href="https://openbci.com" target="_blank" rel="noopener">ACCESS ▸</a>
       </div>
     </article>
@@ -320,8 +346,8 @@
         <img class="tclogo" alt="Harvard University" src="https://logo.clearbit.com/harvard.edu" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=harvard.edu&amp;sz=128'"/>
         <p class="kick">Graduate research · Harvard</p>
         <h3>Center for Nanoscale Systems</h3>
-        <p class="where">// GRADUATE STUDENT · CAMBRIDGE, MA · 2013–2019</p>
-        <p class="desc">My graduate years, at the materials layer — developing soft, nanoscale materials for implants meant to live in the body. A formative chapter, kept brief.</p>
+        <p class="where">// GRADUATE STUDENT · CAMBRIDGE, MA · 2014–2016</p>
+        <p class="desc"> In a strange turn of events, I was invited to form a well-funded research group in affiliation with the Center for Nanoscale Systems (and ... others) to lead the application of functionalized silicon nanowire probes in memory augmentation, on the back of some very interesting conversations with Berger and others. My brief time as a doctoral researcher and my even briefer time as a PI were turbulent, but I wouldn't have traded what I learned there for anything.</p>
         <a class="visit" href="https://cns1.rc.fas.harvard.edu/" target="_blank" rel="noopener">VISIT CNS &#9656;</a>
       </div>
     </article>
@@ -339,8 +365,8 @@
       <div class="cbody">
         <p class="kick">Networked microscale implants · Brown</p>
         <h3>Neurograins</h3>
-        <p class="where">// NURMIKKO LAB · BROWN UNIVERSITY · 2015–2021</p>
-        <p class="desc">Before one big implant, we tried a swarm of tiny ones. Neurograins are hundreds of independent, sub-millimeter “grains” scattered across the cortex — each recording or stimulating on its own, kept in sync by a wearable skin-patch radio. I built recording and stimulation ASICs, the wireless networking that coordinates a thousand nodes at once, and the neural decoding, across benchtop and in-vivo studies. This was my Brown era, all at once — the <a class="ln" href="https://www.braingate.org" target="_blank" rel="noopener">BrainGate</a> clinical program, computational neuroscience at the <a class="ln" href="https://carney.brown.edu/" target="_blank" rel="noopener">Carney Institute</a>, and robotics at the <a class="ln" href="https://hcri.brown.edu/about/" target="_blank" rel="noopener">Humanity-Centered Robotics Initiative</a> — where alongside the grains I modeled personalized neurostimulation to quiet epileptic cortex, and built multi-extruder 3D printers, smart furniture, and a force-feedback exoskeleton.</p>
+        <p class="where">// NURMIKKO LAB · BROWN UNIVERSITY · 2016–2021</p>
+        <p class="desc">Before one big implant, we tried a swarm of tiny ones. Neurograins are hundreds of independent, sub-millimeter “grains” scattered across the cortex — each recording or stimulating on its own, kept in sync by a wearable radio. I built recording and stimulation ASICs, the wireless networking that coordinates a thousand nodes at once, and the neural decoding, across benchtop and in-vivo studies. This was my Brown era, all at once — the <a class="ln" href="https://www.braingate.org" target="_blank" rel="noopener">BrainGate</a> clinical program, computational neuroscience at the <a class="ln" href="https://carney.brown.edu/" target="_blank" rel="noopener">Carney Institute</a>, and robotics at the <a class="ln" href="https://hcri.brown.edu/about/" target="_blank" rel="noopener">Humanity-Centered Robotics Initiative</a> — where alongside the grains I modeled personalized neurostimulation to quiet epileptic cortex, built multi-extruder 3D printers, smart furniture, and a force-feedback exoskeleton.</p>
         <div style="display:flex; gap:12px; flex-wrap:wrap"><a class="visit" href="https://carney.brown.edu/research-projects/neurograins" target="_blank" rel="noopener">PROJECT PAGE &#9656;</a><a class="visit" href="https://www.nature.com/articles/s41928-021-00631-8" target="_blank" rel="noopener">NATURE PAPER &#9656;</a></div>
         <a class="ng-preview" href="https://carney.brown.edu/research-projects/neurograins" target="_blank" rel="noopener">
           <img src="https://carney.brown.edu/sites/default/files/2024-05/Neurograin_updated.png" alt="Neurograins — Carney Institute, Brown University" loading="lazy" onerror="this.parentNode.style.display=&quot;none&quot;"/>
@@ -377,7 +403,7 @@
         <p class="kick">Miniaturized brain &amp; biomedical imaging</p>
         <h3>4Catalyzer</h3>
         <p class="where">// EMBEDDED ML ENGINEER · 4CATALYZER · 2019–2022</p>
-        <p class="desc">Chasing the brain with sound and magnets instead of wires. Across 454 Bio, Tesseract, Quantum-Si, Hyperfine, Liminal and Butterfly, I built physics-informed imaging models and hardware — protein quantification, low-field MRI, transcranial-Doppler ultrasound, retinal scanners that screen for glaucoma and Alzheimer's, and CUDA beamforming for wearable ultrasonic neuromodulation. Pieces of me are scattered through the Butterfly Garden.</p>
+        <p class="desc"> My first industry position, developing miniaturized versions of commonly existing (but bulky and expensive) medical imaging modalities. Across 454 Bio, Tesseract, Quantum-Si, Hyperfine, Liminal and Butterfly, I built physics-informed imaging models and hardware — protein quantification, low-field MRI, transcranial-Doppler ultrasound, OCT scanners, and CUDA beamforming for wearable ultrasonic neuromodulation. This was where I started to go all in on CMOS, embedded systems, and edge ML as the factors in the "virtuous cycle." My code and boards live on through <a class="ln" href="https://www.merge.io/blog" target="_blank" rel="noopener">Merge Labs</a>, <a class="ln" href="https://alephneuro.com/" target="_blank" rel="noopener">Aleph Neuro</a>, <a class="ln" href="https://www.midjourney.com/medical" target="_blank" rel="noopener">Midjourney</a>, and other companies in the Butterfly Garden.</p>
         <a class="visit" href="https://www.4catalyzer.com" target="_blank" rel="noopener">ACCESS ▸</a>
       </div>
     </article>
@@ -397,7 +423,7 @@
         <p class="kick">Endovascular neuroelectronics</p>
         <h3>Synchron</h3>
         <p class="where">// SR. NEUROELECTRONICS ENGINEER · 2022–2023</p>
-        <p class="desc">A brain-computer interface that reaches people with ALS through a blood vessel — no open-brain surgery. I wrote the Class III implant firmware (secure data transfer, on-device logging), built hardware for real-time motor decoding and cloud-based drift correction, and modeled how signals travel through the electrode to steer how we built it. My work rides along in the COMMAND clinical trial.</p>
+        <p class="desc">A brain-computer interface that reaches people with ALS through a blood vessel — no open-brain surgery. I wrote the Class III implant firmware (secure data transfer, on-device logging), built hardware for real-time motor decoding and cloud-based drift correction, and modeled how signals travel through the electrode to steer how we built it. My work lives in the COMMAND and INTENT trials.</p>
         <a class="visit" href="https://synchron.com" target="_blank" rel="noopener">ACCESS ▸</a>
       </div>
     </article>
@@ -428,13 +454,32 @@
         <p class="kick">Conformable µECoG</p>
         <h3>Neurosoft Bioelectronics</h3>
         <p class="where">// SR. EMBEDDED SYSTEMS ENGINEER · 2025–PRESENT</p>
-        <p class="desc">Right now — the newest way to listen. I build conformable micro-ECoG arrays: electrodes soft and thin enough to settle into the brain's folds for high-density recording with full cortical coverage. I work across the whole stack here, marrying Neurosoft's electrode materials to the recording hardware, the AI decoding pipelines, and the firmware that ties it all together.</p>
+        <p class="desc">Currently working on something new! I believe in large scale, deep brain access as the final frontier of neuroscience, and I'm building the tool that will get it for us.</p>
         <p class="ncap"><span class="nt">High-resolution prosthetic hearing with a soft auditory brainstem implant in macaques</span> <a class="nlink" href="https://www.nature.com/articles/s41551-025-01378-9" target="_blank" rel="noopener">READ ↗</a></p>
         <a class="visit" href="https://www.neurosoftbio.com" target="_blank" rel="noopener">ACCESS ▸</a>
       </div>
     </article>
     </div>
   </div>
+
+  </section>
+  <section class="panel" id="tab-essays" hidden>
+    <div class="sechead"><h2>ESSAYS<span>_</span></h2><span class="meta">// thinking out loud · coming soon</span></div>
+    <div class="essays">
+      <article class="card"><span class="bracket tl"></span><span class="bracket br"></span><div class="cbody"><p class="kick">Draft · ~8 min read</p><h3>On p-zombies, and why I never left</h3><p class="desc">The thought experiment that started it all — and what fifteen years in the lab did to my answer.</p><div class="etags"><span class="etag">consciousness</span><span class="etag">philosophy</span></div></div></article>
+      <article class="card"><span class="bracket tl"></span><span class="bracket br"></span><div class="cbody"><p class="kick">Draft · ~6 min read</p><h3>Schemas for crossing disciplines</h3><p class="desc">A working theory of translation — how I carry one field's idea into another, and why that's the whole job.</p><div class="etags"><span class="etag">learning</span><span class="etag">design</span><span class="etag">intersectionality</span></div></div></article>
+      <article class="card"><span class="bracket tl"></span><span class="bracket br"></span><div class="cbody"><p class="kick">Note · ~4 min read</p><h3>The sundial and the implant are the same hobby</h3><p class="desc">On doodads — why making a kinetic sculpture and making a neural interface feel like exactly the same thing.</p><div class="etags"><span class="etag">making</span><span class="etag">hardware</span></div></div></article>
+    </div>
+  </section>
+  <section class="panel" id="tab-workshop" hidden>
+    <div class="sechead"><h2>WORKSHOP<span>_</span></h2><span class="meta">// doodads &amp; home projects</span></div>
+    <div class="shop-grid">
+      <article class="card"><span class="bracket tl"></span><span class="bracket br"></span><div class="ph">// media coming soon</div><div class="cbody"><p class="kick">Status · In progress</p><h3>Sundial sculpture</h3><p class="desc">A kinetic sundial that tells time in shadow and light.</p></div></article>
+      <article class="card"><span class="bracket tl"></span><span class="bracket br"></span><div class="ph">// media coming soon</div><div class="cbody"><p class="kick">Status · Ongoing</p><h3>TTRPG terrain &amp; minis</h3><p class="desc">3D-printed dungeons, dice towers, and little guys.</p></div></article>
+      <article class="card"><span class="bracket tl"></span><span class="bracket br"></span><div class="ph">// media coming soon</div><div class="cbody"><p class="kick">Status · Prototype</p><h3>Artificial senses</h3><p class="desc">Wearables that add a sense — magnetoreception, echolocation.</p></div></article>
+      <article class="card"><span class="bracket tl"></span><span class="bracket br"></span><div class="ph">// media coming soon</div><div class="cbody"><p class="kick">Status · Sketching</p><h3>Smart furniture</h3><p class="desc">Furniture that pays a little attention back.</p></div></article>
+    </div>
+  </section>
 
   <!-- ============ FOOTER ============ -->
   <footer>
@@ -499,6 +544,21 @@
         a.parentNode.replaceChild(slide, a);
       });
     });
+  </script>
+  <script>
+    (function(){
+      var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.panel');
+      function show(name){
+        panels.forEach(function(p){ p.hidden = (p.id!=='tab-'+name); });
+        tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.tab===name); });
+      }
+      tabs.forEach(function(t){ t.addEventListener('click', function(){
+        show(t.dataset.tab);
+        history.replaceState(null,'', t.dataset.tab==='work' ? location.pathname : '#'+t.dataset.tab);
+      }); });
+      var hsh=(location.hash||'').replace('#','');
+      show(hsh==='essays'||hsh==='workshop' ? hsh : 'work');
+    })();
   </script>
 </body>
 </html>
